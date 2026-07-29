@@ -1,0 +1,122 @@
+// src/components/alerts/AlertTimeline.jsx
+
+
+import useAlertsStore from "../../store/alertsStore";
+
+
+
+function AlertTimeline(){
+
+
+    const alerts =
+    useAlertsStore(
+        (state)=>state.alerts
+    );
+
+
+
+
+    return (
+
+
+        <div className="alert-timeline-card">
+
+
+
+            <h3>
+                Alert Timeline
+            </h3>
+
+
+
+
+
+            <div className="alert-timeline">
+
+
+                {
+
+                alerts.map(
+
+                    (alert)=>(
+
+
+                    <div
+
+                    className="timeline-item"
+
+                    key={alert.id}
+
+                    >
+
+
+
+
+                        <div className="timeline-dot">
+
+                        </div>
+
+
+
+
+                        <div className="timeline-content">
+
+
+                            <h4>
+
+                                {alert.title}
+
+                            </h4>
+
+
+
+                            <p>
+
+                                {alert.device}
+
+                            </p>
+
+
+
+                            <span>
+
+                                {alert.time}
+
+                            </span>
+
+
+
+                        </div>
+
+
+
+
+                    </div>
+
+
+                    )
+
+
+                )
+
+                }
+
+
+
+            </div>
+
+
+
+
+
+        </div>
+
+
+    );
+
+
+}
+
+
+
+export default AlertTimeline;

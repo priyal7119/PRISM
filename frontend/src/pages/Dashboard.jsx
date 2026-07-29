@@ -1,39 +1,101 @@
-import Card from "../components/common/Card";
-import Button from "../components/common/Button";
-import Badge from "../components/common/Badge";
-import SectionHeader from "../components/common/SectionHeader";
-import PageContainer from "../components/common/PageContainer";
+import { useEffect } from "react";
+
+import DashboardHeader from "../components/dashboard/DashboardHeader";
+import StatCard from "../components/dashboard/StatCard";
+import MetricsCard from "../components/dashboard/MetricsCard";
+import PredictionCard from "../components/dashboard/PredictionCard";
+import RecentAlerts from "../components/dashboard/RecentAlerts";
+import QuickActions from "../components/dashboard/QuickActions";
+import Sidebar from "../components/dashboard/Sidebar";
+
+import useDashboardStore from "../store/dashboardStore";
+
+import "../styles/dashboard.css";
 
 function Dashboard() {
 
+    const {
+        dashboard,
+        loading,
+        fetchDashboard
+    } = useDashboardStore();
+
+    useEffect(() => {
+        fetchDashboard();
+    }, [fetchDashboard]);
+
+    if (loading) {
+        return <div className="dashboard-loading">Loading Dashboard...</div>;
+    }
+
+    const statusCards = [
+        {
+            label: "Network Status",
+            value: dashboard?.status || "Nominal",
+            variant: "success"
+        },
+        {
+            label: "AI Confidence",
+            value: `${dashboard?.ai_confidence ?? 97}%`,
+            variant: "info"
+        },
+        {
+            label: "Risk Level",
+            value: dashboard?.risk || "Low",
+            variant: "warning"
+        },
+        {
+            label: "Last Scan",
+            value: dashboard?.last_scan || "2 min ago",
+            variant: "neutral"
+        }
+    ];
+
     return (
 
-        <PageContainer>
+        <div className="dashboard-shell">
+          <Sidebar />
 
-            <SectionHeader
-                title="Dashboard"
-                subtitle="Network Overview"
+          <main className="dashboard">
+            <DashboardHeader
+              title="Network Intelligence Dashboard"
+              description="Real-time overview of your network performance and AI insights."
+              statusCards={statusCards}
             />
 
-            <Card>
-
-                <Badge
-                    text="Nominal"
-                    color="green"
+            <div className="stats-grid">
+              {dashboard?.stats?.map((item, index) => (
+                <StatCard
+                  key={index}
+                  title={item.title}
+                  value={item.value}
+                  note={item.note}
                 />
+              ))}
+            </div>
 
-                <br />
-                <br />
+            <div className="dashboard-grid">
+              <MetricsCard
+                title="Network Metrics"
+                data={dashboard?.metrics ?? []}
+              />
 
-                <Button>
+              <PredictionCard
+                predictions={dashboard?.predictions ?? []}
+              />
+            </div>
 
-                    Launch Demo
+            <div className="dashboard-grid dashboard-bottom-row">
+              <RecentAlerts
+                alerts={dashboard?.alerts ?? []}
+              />
 
-                </Button>
-
-            </Card>
-
-        </PageContainer>
+              <QuickActions
+                actions={dashboard?.quick_actions ?? []}
+              />
+            </div>
+          </main>
+        </div>
 
     );
 
