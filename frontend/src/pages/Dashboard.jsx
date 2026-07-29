@@ -6,7 +6,6 @@ import MetricsCard from "../components/dashboard/MetricsCard";
 import PredictionCard from "../components/dashboard/PredictionCard";
 import RecentAlerts from "../components/dashboard/RecentAlerts";
 import QuickActions from "../components/dashboard/QuickActions";
-import Sidebar from "../components/dashboard/Sidebar";
 
 import useDashboardStore from "../store/dashboardStore";
 
@@ -53,10 +52,7 @@ function Dashboard() {
 
     return (
 
-        <div className="dashboard-shell">
-          <Sidebar />
-
-          <main className="dashboard">
+          <main className="dashboard" style={{ padding: 0 }}>
             <DashboardHeader
               title="Network Intelligence Dashboard"
               description="Real-time overview of your network performance and AI insights."
@@ -95,7 +91,6 @@ function Dashboard() {
               />
             </div>
           </main>
-        </div>
 
     );
 

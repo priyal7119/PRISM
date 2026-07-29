@@ -1,29 +1,36 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
-import Dashboard from './pages/Dashboard'
-import NetworkHealth from './pages/NetworkHealth'
-import Predictions from './pages/Predictions'
-import AICopilot from './pages/AICopilot'
-import Devices from './pages/Devices'
-import Alerts from './pages/Alerts'
-import Telemetry from './pages/Telemetry'
-import NotFound from './pages/NotFound'
+// src/App.jsx
+import {
+    BrowserRouter,
+    Routes,
+    Route,
+    Navigate
+} from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
+import NetworkHealth from "./pages/NetworkHealth";
+import Predictions from "./pages/Predictions";
+import Copilot from "./pages/AICopilot";
+import Devices from "./pages/Devices";
+import Alerts from "./pages/Alerts";
+import Reports from "./pages/Reports";
+import Settings from "./pages/Settings";
+import Layout from "./components/layout/Layout";
 
-function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/network" element={<NetworkHealth />} />
-        <Route path="/devices" element={<Devices />} />
-        <Route path="/alerts" element={<Alerts />} />
-        <Route path="/prediction" element={<Predictions />} />
-        <Route path="/copilot" element={<AICopilot />} />
-        <Route path="/telemetry" element={<Telemetry />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
-  )
+function App(){
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Layout><Dashboard /></Layout>} />
+                <Route path="/dashboard" element={<Layout><Dashboard /></Layout>} />
+                <Route path="/network" element={<Layout><NetworkHealth /></Layout>} />
+                <Route path="/predictions" element={<Layout><Predictions /></Layout>} />
+                <Route path="/copilot" element={<Layout><Copilot /></Layout>} />
+                <Route path="/devices" element={<Layout><Devices /></Layout>} />
+                <Route path="/alerts" element={<Layout><Alerts /></Layout>} />
+                <Route path="/reports" element={<Layout><Reports /></Layout>} />
+                <Route path="/settings" element={<Layout><Settings /></Layout>} />
+                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+        </BrowserRouter>
+    );
 }
-
-export default App
+export default App;

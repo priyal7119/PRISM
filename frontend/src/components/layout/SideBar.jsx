@@ -1,3 +1,4 @@
+// src/components/layout/SideBar.jsx
 import { NavLink } from "react-router-dom";
 import useNetworkStore from "../../store/networkStore";
 
@@ -6,12 +7,13 @@ function Sidebar() {
 
   const navItems = [
     { label: "Dashboard", path: "/dashboard" },
-    { label: "Network", path: "/network" },
+    { label: "Network Health", path: "/network" },
+    { label: "AI Predictions", path: "/predictions" },
+    { label: "AI Copilot", path: "/copilot" },
     { label: "Devices", path: "/devices" },
+    { label: "Alerts", path: "/alerts" },
     { label: "Reports", path: "/reports" },
-    { label: "Prediction", path: "/prediction" },
-    { label: "Copilot", path: "/copilot" },
-    { label: "Telemetry", path: "/telemetry" },
+    { label: "Settings", path: "/settings" },
   ];
 
   return (
@@ -36,13 +38,6 @@ function Sidebar() {
         ))}
       </div>
 
-      <div className="sidebar-cta">
-        <h4>Stay ahead of outages</h4>
-        <p>Access critical intelligence and keep your network healthy with proactive alerts.</p>
-        <NavLink to="/network" className="sidebar-cta__button" onMouseEnter={() => fetchNetwork()}>
-          Get insights
-        </NavLink>
-      </div>
     </aside>
   );
 }

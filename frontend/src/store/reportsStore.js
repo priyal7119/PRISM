@@ -1,4 +1,4 @@
-// src/store/alertsStore.js
+// src/store/reportsStore.js
 
 
 import {create} from "zustand";
@@ -6,35 +6,39 @@ import {create} from "zustand";
 
 import {
 
-    getAlerts,
-    getAlertSummary,
-    resolveAlert
+    getReports,
+
+    getReportSummary,
+
+    generateReport
 
 }
 
-from "../api/alerts";
+from "../api/reports";
 
 
 
 
 
-const useAlertsStore = create(
+
+
+const useReportsStore = create(
 
 (set,get)=>(
 
 {
 
 
-    alerts:[],
+    reports:[],
 
 
-    filteredAlerts:[],
+    filteredReports:[],
 
 
     summary:{},
 
 
-    selectedAlert:null,
+    selectedReport:null,
 
 
     loading:false,
@@ -44,7 +48,7 @@ const useAlertsStore = create(
     search:"",
 
 
-    severityFilter:"All",
+    typeFilter:"All",
 
 
     statusFilter:"All",
@@ -54,7 +58,9 @@ const useAlertsStore = create(
 
 
 
-    loadAlerts:async()=>{
+
+
+    loadReports:async()=>{
 
 
         set({
@@ -66,15 +72,17 @@ const useAlertsStore = create(
 
 
         const data =
-        await getAlerts();
+
+        await getReports();
+
 
 
 
         set({
 
-            alerts:data,
+            reports:data,
 
-            filteredAlerts:data,
+            filteredReports:data,
 
             loading:false
 
@@ -88,11 +96,15 @@ const useAlertsStore = create(
 
 
 
+
+
     loadSummary:async()=>{
 
 
         const data =
-        await getAlertSummary();
+
+        await getReportSummary();
+
 
 
 
@@ -111,22 +123,28 @@ const useAlertsStore = create(
 
 
 
+
+
     applyFilters:()=>{
 
 
         const {
 
-            alerts,
+            reports,
+
             search,
-            severityFilter,
+
+            typeFilter,
+
             statusFilter
+
 
         } = get();
 
 
 
 
-        let result = alerts;
+        let result = reports;
 
 
 
@@ -136,14 +154,19 @@ const useAlertsStore = create(
 
 
             result =
+
             result.filter(
 
-                (alert)=>
+                (report)=>
 
-                alert.title
+                report.name
+
                 .toLowerCase()
+
                 .includes(
+
                     search.toLowerCase()
+
                 )
 
             );
@@ -156,20 +179,22 @@ const useAlertsStore = create(
 
 
 
-        if(severityFilter !== "All"){
+        if(typeFilter !== "All"){
 
 
             result =
+
             result.filter(
 
-                (alert)=>
+                (report)=>
 
-                alert.severity === severityFilter
+                report.type === typeFilter
 
             );
 
 
         }
+
 
 
 
@@ -179,11 +204,12 @@ const useAlertsStore = create(
 
 
             result =
+
             result.filter(
 
-                (alert)=>
+                (report)=>
 
-                alert.status === statusFilter
+                report.status === statusFilter
 
             );
 
@@ -193,15 +219,16 @@ const useAlertsStore = create(
 
 
 
+
         set({
 
-            filteredAlerts:result
+            filteredReports:result
 
         });
 
 
-
     },
+
 
 
 
@@ -230,12 +257,13 @@ const useAlertsStore = create(
 
 
 
-    setSeverityFilter:(value)=>{
+
+    setTypeFilter:(value)=>{
 
 
         set({
 
-            severityFilter:value
+            typeFilter:value
 
         });
 
@@ -245,6 +273,7 @@ const useAlertsStore = create(
 
 
     },
+
 
 
 
@@ -274,6 +303,7 @@ const useAlertsStore = create(
 
 
 
+
     resetFilters:()=>{
 
 
@@ -281,11 +311,11 @@ const useAlertsStore = create(
 
             search:"",
 
-            severityFilter:"All",
+            typeFilter:"All",
 
             statusFilter:"All",
 
-            filteredAlerts:get().alerts
+            filteredReports:get().reports
 
         });
 
@@ -298,12 +328,13 @@ const useAlertsStore = create(
 
 
 
-    selectAlert:(alert)=>{
+
+    selectReport:(report)=>{
 
 
         set({
 
-            selectedAlert:alert
+            selectedReport:report
 
         });
 
@@ -316,22 +347,21 @@ const useAlertsStore = create(
 
 
 
-    resolve:async(id)=>{
 
-        await resolveAlert(id);
+    generate:async(type)=>{
+
+        await generateReport(type);
 
         const updated =
-        await getAlerts();
 
-        const updatedAlert = updated.find((a) => a.id === id);
+        await getReports();
+
 
         set({
 
-            alerts:updated,
+            reports:updated,
 
-            filteredAlerts:updated,
-
-            selectedAlert:updatedAlert || null
+            filteredReports:updated
 
         });
 
@@ -350,4 +380,5 @@ const useAlertsStore = create(
 );
 
 
-export default useAlertsStore;
+
+export default useReportsStore;

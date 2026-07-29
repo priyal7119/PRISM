@@ -252,24 +252,24 @@ const useDevicesStore = create(
 
     restart:async(id)=>{
 
-
         await restartDevice(id);
-
-
 
         const updated =
         await getDevices();
 
-
+        const updatedDevice = updated.find((d) => d.id === id);
 
         set({
 
             devices:updated,
 
-            filteredDevices:updated
+            filteredDevices:updated,
+
+            selectedDevice:updatedDevice || null
 
         });
 
+        await get().loadSummary();
 
     }
 

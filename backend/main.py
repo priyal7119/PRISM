@@ -6,6 +6,8 @@ from routers.prediction import router as prediction_router
 from routers.copilot import router as copilot_router
 from routers import devices
 from routers import alerts
+from routers import reports
+from routers import settings
 
 app = FastAPI(
     title="PRISM API",
@@ -39,6 +41,7 @@ def health():
 app.include_router(network_router)
 app.include_router(prediction_router)
 app.include_router(copilot_router)
-
 app.include_router(devices.router)
 app.include_router(alerts.router)
+app.include_router(reports.router)
+app.include_router(settings.router)

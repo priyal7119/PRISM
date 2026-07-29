@@ -476,3 +476,49 @@ transform:translateY(0);
 .insight-item{
 animation:fadeUp .35s ease;
 }
+
+/* ===== LOCAL CHAT BUBBLES ===== */
+
+.chat-local-history {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 14px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 4px 2px;
+}
+
+.chat-bubble {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.55;
+    max-width: 82%;
+}
+
+.chat-bubble--user {
+    background: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.18);
+    align-self: flex-end;
+    color: #1d4ed8;
+}
+
+.chat-bubble--assistant {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    align-self: flex-start;
+    color: #374151;
+}
+
+.chat-bubble__role {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    opacity: 0.6;
+    margin-bottom: 2px;
+}

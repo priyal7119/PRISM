@@ -4,7 +4,7 @@
 from fastapi import APIRouter
 
 
-from services.alerts_service import (
+from services.alert_services import (
 
     get_all_alerts,
     get_alert_by_id,
