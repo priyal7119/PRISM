@@ -15,4 +15,6 @@ frontend/dist/
 Thumbs.db
 
 # VS Code
-.vscode/settings.json
+.vscode/settings.json# ML / AI (Person 1)
+*.pth
+chroma_store/
