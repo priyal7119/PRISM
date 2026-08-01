@@ -1,0 +1,195 @@
+{
+  "name": "prism-network",
+  "type": "clab",
+  "clab": {
+    "config": {
+      "prefix": "clab",
+      "mgmt": {
+        "network": "clab",
+        "bridge": "br-b6575f5df989",
+        "ipv4-subnet": "172.20.20.0/24",
+        "ipv4-gw": "172.20.20.1",
+        "ipv6-subnet": "3fff:172:20:20::/64",
+        "ipv6-gw": "3fff:172:20:20::1",
+        "external-access": true
+      }
+    }
+  },
+  "ssh-pub-keys": [],
+  "nodes": {
+    "datacenter": {
+      "index": "0",
+      "shortname": "datacenter",
+      "longname": "clab-prism-network-datacenter",
+      "fqdn": "datacenter.prism-network.io",
+      "group": "",
+      "labdir": "/home/apurva/PRISM/network/clab-prism-network/datacenter",
+      "kind": "linux",
+      "image": "frrouting/frr:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.4",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::4",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-b6575f5df989",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/apurva/PRISM/network/clab-prism-network/datacenter",
+        "clab-node-longname": "clab-prism-network-datacenter",
+        "clab-node-name": "datacenter",
+        "clab-node-type": "",
+        "clab-owner": "apurva",
+        "clab-topo-file": "/home/apurva/PRISM/network/topology.yml",
+        "containerlab": "prism-network"
+      },
+      "port-bindings": [
+      ]
+    },
+    "delhi-branch": {
+      "index": "1",
+      "shortname": "delhi-branch",
+      "longname": "clab-prism-network-delhi-branch",
+      "fqdn": "delhi-branch.prism-network.io",
+      "group": "",
+      "labdir": "/home/apurva/PRISM/network/clab-prism-network/delhi-branch",
+      "kind": "linux",
+      "image": "frrouting/frr:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.2",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::2",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-b6575f5df989",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/apurva/PRISM/network/clab-prism-network/delhi-branch",
+        "clab-node-longname": "clab-prism-network-delhi-branch",
+        "clab-node-name": "delhi-branch",
+        "clab-node-type": "",
+        "clab-owner": "apurva",
+        "clab-topo-file": "/home/apurva/PRISM/network/topology.yml",
+        "containerlab": "prism-network"
+      },
+      "port-bindings": [
+      ]
+    },
+    "mumbai-hub": {
+      "index": "2",
+      "shortname": "mumbai-hub",
+      "longname": "clab-prism-network-mumbai-hub",
+      "fqdn": "mumbai-hub.prism-network.io",
+      "group": "",
+      "labdir": "/home/apurva/PRISM/network/clab-prism-network/mumbai-hub",
+      "kind": "linux",
+      "image": "frrouting/frr:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.3",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::3",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-b6575f5df989",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/apurva/PRISM/network/clab-prism-network/mumbai-hub",
+        "clab-node-longname": "clab-prism-network-mumbai-hub",
+        "clab-node-name": "mumbai-hub",
+        "clab-node-type": "",
+        "clab-owner": "apurva",
+        "clab-topo-file": "/home/apurva/PRISM/network/topology.yml",
+        "containerlab": "prism-network"
+      },
+      "port-bindings": [
+      ]
+    },
+    "pune-branch": {
+      "index": "3",
+      "shortname": "pune-branch",
+      "longname": "clab-prism-network-pune-branch",
+      "fqdn": "pune-branch.prism-network.io",
+      "group": "",
+      "labdir": "/home/apurva/PRISM/network/clab-prism-network/pune-branch",
+      "kind": "linux",
+      "image": "frrouting/frr:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "172.20.20.5",
+      "mgmt-ipv4-prefix-length": 24,
+      "mgmt-ipv6-address": "3fff:172:20:20::5",
+      "mgmt-ipv6-prefix-length": 64,
+      "mac-address": "",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-b6575f5df989",
+        "clab-node-group": "",
+        "clab-node-kind": "linux",
+        "clab-node-lab-dir": "/home/apurva/PRISM/network/clab-prism-network/pune-branch",
+        "clab-node-longname": "clab-prism-network-pune-branch",
+        "clab-node-name": "pune-branch",
+        "clab-node-type": "",
+        "clab-owner": "apurva",
+        "clab-topo-file": "/home/apurva/PRISM/network/topology.yml",
+        "containerlab": "prism-network"
+      },
+      "port-bindings": [
+      ]
+    }
+  },
+  "links": [
+    {
+      "endpoints": {
+        "a": {
+          "node": "mumbai-hub",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:38:db:d2",
+          "peer": "z"
+        },
+        "z": {
+          "node": "delhi-branch",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:13:f8:7a",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "mumbai-hub",
+          "interface": "eth2",
+          "mac": "aa:c1:ab:22:0a:07",
+          "peer": "z"
+        },
+        "z": {
+          "node": "pune-branch",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:88:6e:18",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "mumbai-hub",
+          "interface": "eth3",
+          "mac": "aa:c1:ab:4a:03:18",
+          "peer": "z"
+        },
+        "z": {
+          "node": "datacenter",
+          "interface": "eth1",
+          "mac": "aa:c1:ab:54:b0:f4",
+          "peer": "a"
+        }
+      }
+    }
+  ]
+}

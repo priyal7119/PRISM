@@ -1,0 +1,21 @@
+---
+datacenter:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.20.20.4
+delhi-branch:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.20.20.2
+mumbai-hub:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.20.20.3
+pune-branch:
+    username: 
+    password: 
+    platform: linux
+    hostname: 172.20.20.5
