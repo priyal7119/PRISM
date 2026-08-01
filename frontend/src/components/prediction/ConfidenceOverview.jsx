@@ -1,171 +1,104 @@
+// src/components/prediction/ConfidenceOverview.jsx
+
 import "../../styles/prediction.css";
 
-function ConfidenceOverview({
-
-    confidence
-
-}) {
-
+function ConfidenceOverview({ confidence }) {
     if (!confidence) return null;
 
-    const total =
+    const high = confidence.high ?? 0;
+    const medium = confidence.medium ?? 0;
+    const low = confidence.low ?? 0;
 
-        confidence.high +
+    const total = high + medium + low || 1;
 
-        confidence.medium +
-
-        confidence.low;
-
-    const highPercent = (confidence.high / total) * 100;
-
-    const mediumPercent = (confidence.medium / total) * 100;
-
-    const lowPercent = (confidence.low / total) * 100;
+    const overall = Math.round(
+        ((high * 100) + (medium * 75) + (low * 45)) / total
+    );
 
     return (
-
-        <div className="prediction-card">
+        <div className="prediction-card confidence-card">
 
             <div className="prediction-card-header">
-
                 <div>
-
-                    <h2>
-
-                        Prediction Confidence
-
-                    </h2>
-
-                    <p>
-
-                        AI model confidence distribution
-
-                    </p>
-
+                    <h2>Prediction Confidence</h2>
+                    <p>AI model confidence distribution</p>
                 </div>
-
             </div>
 
             <div className="confidence-overview">
 
                 <div className="confidence-circle">
 
-                    <h1>
+                    <div className="confidence-score">
+                        {overall}%
+                    </div>
 
-                        96%
-
-                    </h1>
-
-                    <span>
-
+                    <div className="confidence-text">
                         Overall Confidence
-
-                    </span>
+                    </div>
 
                 </div>
 
                 <div className="confidence-details">
 
-                    <div className="confidence-item">
+                    <div className="confidence-row">
 
-                        <div className="confidence-label">
-
-                            <span className="dot high"></span>
-
-                            High Confidence
-
+                        <div className="confidence-info">
+                            <span className="confidence-dot high"></span>
+                            <span>High Confidence</span>
                         </div>
 
-                        <strong>
-
-                            {confidence.high}
-
-                        </strong>
+                        <strong>{high}</strong>
 
                     </div>
 
                     <div className="confidence-track">
-
                         <div
-
                             className="confidence-fill high"
-
                             style={{
-
-                                width: `${highPercent}%`
-
+                                width: `${(high / total) * 100}%`,
                             }}
-
-                        ></div>
-
+                        />
                     </div>
 
-                    <div className="confidence-item">
+                    <div className="confidence-row">
 
-                        <div className="confidence-label">
-
-                            <span className="dot medium"></span>
-
-                            Medium Confidence
-
+                        <div className="confidence-info">
+                            <span className="confidence-dot medium"></span>
+                            <span>Medium Confidence</span>
                         </div>
 
-                        <strong>
-
-                            {confidence.medium}
-
-                        </strong>
+                        <strong>{medium}</strong>
 
                     </div>
 
                     <div className="confidence-track">
-
                         <div
-
                             className="confidence-fill medium"
-
                             style={{
-
-                                width: `${mediumPercent}%`
-
+                                width: `${(medium / total) * 100}%`,
                             }}
-
-                        ></div>
-
+                        />
                     </div>
 
-                    <div className="confidence-item">
+                    <div className="confidence-row">
 
-                        <div className="confidence-label">
-
-                            <span className="dot low"></span>
-
-                            Low Confidence
-
+                        <div className="confidence-info">
+                            <span className="confidence-dot low"></span>
+                            <span>Low Confidence</span>
                         </div>
 
-                        <strong>
-
-                            {confidence.low}
-
-                        </strong>
+                        <strong>{low}</strong>
 
                     </div>
 
                     <div className="confidence-track">
-
                         <div
-
                             className="confidence-fill low"
-
                             style={{
-
-                                width: `${lowPercent}%`
-
+                                width: `${(low / total) * 100}%`,
                             }}
-
-                        ></div>
-
+                        />
                     </div>
 
                 </div>
@@ -173,9 +106,7 @@ function ConfidenceOverview({
             </div>
 
         </div>
-
     );
-
 }
 
 export default ConfidenceOverview;

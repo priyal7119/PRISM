@@ -1,98 +1,24 @@
-// src/api/reports.js
+import apiClient from "./apiClient";
 
+export const getReports = async () => {
+    const response = await apiClient.get("/reports/");
+    return response.data;
+};
 
-const API_URL =
-"http://localhost:8000";
+export const getReportSummary = async () => {
+    const response = await apiClient.get("/reports/summary");
+    return response.data;
+};
 
+export const getReport = async (id) => {
+    const response = await apiClient.get(`/reports/${id}`);
+    return response.data;
+};
 
-
-
-
-export async function getReports(){
-
-
-    const response =
-
-    await fetch(
-
-        `${API_URL}/reports/`
-
+export const generateReport = async (type) => {
+    const response = await apiClient.post(
+        `/reports/generate/${type}`
     );
 
-
-    return response.json();
-
-}
-
-
-
-
-
-
-
-export async function getReportSummary(){
-
-
-    const response =
-
-    await fetch(
-
-        `${API_URL}/reports/summary`
-
-    );
-
-
-    return response.json();
-
-}
-
-
-
-
-
-
-
-export async function getReport(id){
-
-
-    const response =
-
-    await fetch(
-
-        `${API_URL}/reports/${id}`
-
-    );
-
-
-    return response.json();
-
-}
-
-
-
-
-
-
-
-export async function generateReport(type){
-
-
-    const response =
-
-    await fetch(
-
-        `${API_URL}/reports/generate/${type}`,
-
-        {
-
-            method:"POST"
-
-        }
-
-    );
-
-
-
-    return response.json();
-
-}
+    return response.data;
+};

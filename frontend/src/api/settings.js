@@ -1,87 +1,20 @@
-// src/api/settings.js
+import apiClient from "./apiClient";
 
+export const getSettings = async () => {
+    const response = await apiClient.get("/settings/");
+    return response.data;
+};
 
-const API_URL =
-"http://localhost:8000";
-
-
-
-
-
-export async function getSettings(){
-
-
-    const response =
-
-    await fetch(
-
-        `${API_URL}/settings/`
-
+export const updateSettings = async (data) => {
+    const response = await apiClient.put(
+        "/settings/",
+        data
     );
 
+    return response.data;
+};
 
-    return response.json();
-
-}
-
-
-
-
-
-
-export async function updateSettings(data){
-
-
-    const response =
-
-    await fetch(
-
-        `${API_URL}/settings/`,
-
-        {
-
-            method:"PUT",
-
-            headers:{
-
-                "Content-Type":"application/json"
-
-            },
-
-            body:JSON.stringify(data)
-
-        }
-
-    );
-
-
-    return response.json();
-
-}
-
-
-
-
-
-
-export async function resetSettings(){
-
-
-    const response =
-
-    await fetch(
-
-        `${API_URL}/settings/reset`,
-
-        {
-
-            method:"POST"
-
-        }
-
-    );
-
-
-    return response.json();
-
-}
+export const resetSettings = async () => {
+    const response = await apiClient.post("/settings/reset");
+    return response.data;
+};

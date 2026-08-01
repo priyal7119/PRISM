@@ -1,135 +1,61 @@
 // src/components/devices/DeviceDetailsCard.jsx
-
-
+import { Info } from "lucide-react";
 import useDevicesStore from "../../store/devicesStore";
 
+function DeviceDetailsCard() {
+    const { selectedDevice, loading, error } = useDevicesStore();
 
-function DeviceDetailsCard(){
-
-
-    const device =
-    useDevicesStore(
-        (state)=>state.selectedDevice
-    );
-
-
-
-    if(!device){
-
+    if (loading) {
         return (
-
             <div className="device-details-card">
-
-
-                <h3>
-                    Device Details
-                </h3>
-
-
-                <p>
-                    Select a device to view details
-                </p>
-
-
+                <div className="device-details-header"><h3>Device Details</h3></div>
+                <div className="empty-state"><p>Loading...</p></div>
             </div>
-
         );
-
     }
 
+    if (!selectedDevice) {
+        return (
+            <div className="device-details-card">
+                <div className="device-details-header"><h3>Device Details</h3></div>
+                <div className="empty-state">
+                    <Info size={28} style={{ color: "var(--text-disabled)", marginBottom: 4 }} />
+                    <p>No device selected</p>
+                    <span>Click a row in the table to view details.</span>
+                </div>
+            </div>
+        );
+    }
 
-
+    const specs = [
+        { label: "IP Address", value: selectedDevice.ip },
+        { label: "Type", value: selectedDevice.type },
+        { label: "Status", value: selectedDevice.status },
+        { label: "Location", value: selectedDevice.location },
+        { label: "Uptime", value: selectedDevice.uptime },
+        { label: "Last Seen", value: selectedDevice.last_seen },
+    ];
 
     return (
-
         <div className="device-details-card">
-
-
-            <h3>
-                {device.name}
-            </h3>
-
-
-
-            <div className="device-detail-item">
-
-                <span>
-                    IP Address
-                </span>
-
-                <b>
-                    {device.ip}
-                </b>
-
+            <div className="device-details-header">
+                <div>
+                    <h3>{selectedDevice.name || "Device Details"}</h3>
+                    <span className={`status-pill ${(selectedDevice.status || "unknown").toLowerCase()}`} style={{ marginTop: 6, display: "inline-flex" }}>
+                        {selectedDevice.status || "Unknown"}
+                    </span>
+                </div>
             </div>
-
-
-
-            <div className="device-detail-item">
-
-                <span>
-                    Device Type
-                </span>
-
-                <b>
-                    {device.type}
-                </b>
-
+            <div className="device-spec-grid">
+                {specs.map(spec => (
+                    <div key={spec.label} className="spec-box">
+                        <span>{spec.label}</span>
+                        <strong>{spec.value || "-"}</strong>
+                    </div>
+                ))}
             </div>
-
-
-
-
-            <div className="device-detail-item">
-
-                <span>
-                    Status
-                </span>
-
-                <b>
-                    {device.status}
-                </b>
-
-            </div>
-
-
-
-
-            <div className="device-detail-item">
-
-                <span>
-                    Location
-                </span>
-
-                <b>
-                    {device.location}
-                </b>
-
-            </div>
-
-
-
-
-            <div className="device-detail-item">
-
-                <span>
-                    Last Seen
-                </span>
-
-                <b>
-                    {device.last_seen}
-                </b>
-
-            </div>
-
-
-
         </div>
-
     );
-
-
 }
-
 
 export default DeviceDetailsCard;

@@ -1,15 +1,6 @@
-import axios from "axios";
-
-const API = axios.create({
-
-    baseURL: "http://localhost:8000"
-
-});
+import apiClient from "./apiClient";
 
 export const getNetworkHealth = async () => {
-
-    const response = await API.get("/network");
-
+    const response = await apiClient.get("/network");
     return response.data;
-
 };

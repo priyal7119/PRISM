@@ -1,144 +1,150 @@
-// src/store/settingsStore.js
-
-
-import {create} from "zustand";
-
+import { create } from "zustand";
 
 import {
 
     getSettings,
-
     updateSettings,
-
     resetSettings
 
-}
+} from "../api/settings";
 
-from "../api/settings";
+const useSettingsStore = create((set, get) => ({
 
+    settings: {
 
+        profile: {},
+        network: {},
+        notifications: {},
+        security: {},
+        preferences: {}
 
+    },
 
+    loading: false,
 
-const useSettingsStore = create(
-
-(set)=>({
-
-
-    settings:{
-
-    profile:{},
-
-    network:{},
-
-    notifications:{},
-
-    security:{},
-
-    preferences:{}
-
-},
-
-
-    loading:false,
+    error: null,
 
 
 
-
-
-    loadSettings:async()=>{
-
+    loadSettings: async () => {
 
         set({
 
-            loading:true
+            loading: true,
+            error: null
 
         });
 
+        try {
 
+            const data = await getSettings();
 
-        const data =
+            set({
 
-        await getSettings();
+                settings: data
 
+            });
 
+        }
 
+        catch (error) {
 
-        set({
+            console.error(error);
 
-            settings:data,
+            set({
 
-            loading:false
+                error: error.message
 
-        });
+            });
 
+        }
 
+        finally {
+
+            set({
+
+                loading: false
+
+            });
+
+        }
 
     },
 
 
 
+    updateLocalSetting: (section, field, value) => {
 
-
-
-
-    saveSettings:async(data)=>{
-
-
-        const response =
-
-        await updateSettings(data);
-
-
-
+        const current = get().settings;
 
         set({
 
-            settings:
+            settings: {
 
-            response.settings
+                ...current,
+
+                [section]: {
+
+                    ...current[section],
+
+                    [field]: value
+
+                }
+
+            }
 
         });
-
 
     },
 
 
 
+    saveSettings: async (data) => {
+
+        try {
+
+            const response = await updateSettings(data);
+
+            set({
+
+                settings: response.settings
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+        }
+
+    },
 
 
 
+    reset: async () => {
 
+        try {
 
-    reset:async()=>{
+            const response = await resetSettings();
 
+            set({
 
-        const response =
+                settings: response.settings
 
-        await resetSettings();
+            });
 
+        }
 
+        catch (error) {
 
+            console.error(error);
 
-        set({
-
-            settings:
-
-            response.settings
-
-        });
-
+        }
 
     }
 
-
-
-
-
-
-})
-
-);
-
+}));
 
 export default useSettingsStore;

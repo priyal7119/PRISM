@@ -1,10 +1,8 @@
-import axios from "axios";
+import apiClient from "./apiClient";
 
-const API = axios.create({
-    baseURL: "http://localhost:8000",
-});
+export async function getDashboardData() {
 
-export const getDashboardData = async () => {
-    const response = await API.get("/dashboard");
+    const response = await apiClient.get("/dashboard");
+
     return response.data;
-};
+}

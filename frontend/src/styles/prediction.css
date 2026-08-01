@@ -1,540 +1,880 @@
-/* ===== PAGE ===== */
-.prediction-page{
-min-height:100vh;
-background:#f5f7fb;
-padding:30px;
-display:flex;
-flex-direction:column;
-gap:24px;
-}
+/* src/styles/prediction.css */
+
+.prediction-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ============================================================
+   PREDICTION PAGE HEADER
+============================================================ */
+.prediction-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 
-.prediction-header,
-.prediction-card,
-.prediction-summary-card{
-background:#fff;
-border:1px solid #e5e7eb;
-border-radius:16px;
-box-shadow:0 8px 24px rgba(0,0,0,.05);
-transition:.3s;
+.prediction-header h1 {
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.025em;
 }
 
-.prediction-header{
-padding:28px 32px;
+.prediction-header p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
 }
 
-.prediction-header h1{
-font-size:34px;
-color:#111827;
-margin-bottom:8px;
+/* ============================================================
+   PREDICTION SUMMARY CARDS
+============================================================ */
+.prediction-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
 }
 
-.prediction-header p{
-color:#6b7280;
+.prediction-summary-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.prediction-summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 3px;
+}
+
+.prediction-summary-card.prediction-blue::before { background: var(--primary); }
+.prediction-summary-card.prediction-green::before { background: var(--success); }
+.prediction-summary-card.prediction-orange::before { background: var(--warning); }
+.prediction-summary-card.prediction-red::before { background: var(--critical); }
+
+.prediction-summary-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
-.prediction-summary-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:20px;
+.prediction-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.prediction-summary-card.prediction-blue .prediction-icon-box { background: var(--primary-light); color: var(--primary); }
+.prediction-summary-card.prediction-green .prediction-icon-box { background: var(--success-bg); color: var(--success); }
+.prediction-summary-card.prediction-orange .prediction-icon-box { background: var(--warning-bg); color: var(--warning); }
+.prediction-summary-card.prediction-red .prediction-icon-box { background: var(--critical-bg); color: var(--critical); }
+
+.prediction-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.prediction-content h4 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.prediction-content h2 {
+  font-size: 1.625rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+  margin: 4px 0 0;
+  line-height: 1;
+}
+
+/* ============================================================
+   PREDICTION GRID LAYOUTS
+============================================================ */
+.prediction-grid-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 1100px) {
+  .prediction-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.prediction-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 1100px) {
+  .prediction-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.device-prediction-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* ============================================================
+   PREDICTION CARDS (generic)
+============================================================ */
+.prediction-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.prediction-grid{
-display:grid;
-grid-template-columns:2fr 1fr;
-gap:24px;
+.prediction-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 14px;
 }
 
-.device-prediction-grid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:20px;
+.prediction-card-header h2, .prediction-card-header h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* ============================================================
+   RISK BADGES
+============================================================ */
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-/* ===== CARDS ===== */
+.risk-badge.risk-high {
+  background-color: var(--critical-bg);
+  color: var(--critical);
+  border: 1px solid var(--critical-border);
+}
 
-.prediction-summary-card,
-.prediction-card{
-padding:22px;
+.risk-badge.risk-medium {
+  background-color: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid var(--warning-border);
+}
+
+.risk-badge.risk-low {
+  background-color: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-border);
+}
+
+/* ============================================================
+   FAILURE RISK TABLE
+============================================================ */
+.risk-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-surface);
+}
+
+.risk-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+
+.risk-table th {
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-surface-secondary);
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border-color);
+  z-index: 5;
+  white-space: nowrap;
+}
+
+.risk-table td {
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.risk-table tbody tr:last-child td { border-bottom: none; }
+
+.risk-table tbody tr:nth-child(even) td {
+  background: rgba(255,255,255,0.025);
+}
+
+.risk-table tbody tr:hover td {
+  background: var(--bg-surface-hover) !important;
+}
+
+/* ============================================================
+   CONFIDENCE BAR
+============================================================ */
+.confidence-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.confidence-track {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-surface-secondary);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border-subtle);
+}
+
+.confidence-fill {
+  height: 100%;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 600ms ease;
+}
+
+.confidence-fill.high { background: var(--success); }
+.confidence-fill.medium { background: var(--warning); }
+.confidence-fill.low { background: var(--critical); }
+
+.confidence-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* ============================================================
+   DEVICE PREDICTION CARD (per-device widget)
+============================================================ */
+.device-pred-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: var(--transition-normal);
 }
 
-.prediction-summary-card:hover,
-.prediction-card:hover{
-transform:translateY(-5px);
-box-shadow:0 18px 35px rgba(0,0,0,.08);
+.device-pred-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--primary-border);
 }
 
-.prediction-summary-card{
-position:relative;
-overflow:hidden;
+.device-pred-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.prediction-summary-card::before{
-content:"";
-position:absolute;
-left:0;
-top:0;
-width:100%;
-height:5px;
+.device-pred-card-header h4 {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
-.prediction-blue::before{background:#2563eb;}
-.prediction-green::before{background:#16a34a;}
-.prediction-orange::before{background:#f59e0b;}
-.prediction-red::before{background:#dc2626;}
+.device-pred-card-header p {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
 
-.prediction-top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:18px;
+/* ============================================================
+   RECOMMENDATION PANEL
+============================================================ */
+.recommendation-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-card);
+  padding: 22px 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.prediction-circle{
-width:50px;
-height:50px;
-border-radius:50%;
-background:#eff6ff;
-border:2px solid #bfdbfe;
+.recommendation-panel h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.prediction-trend{
-font-size:24px;
-color:#16a34a;
-font-weight:700;
+.recommendation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.prediction-content h4{
-font-size:14px;
-color:#6b7280;
-margin-bottom:6px;
+.recommendation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-surface-secondary);
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  transition: var(--transition-fast);
 }
 
-.prediction-content h2{
-font-size:30px;
-color:#111827;
-margin-bottom:6px;
+.recommendation-item:hover {
+  border-color: var(--primary-border);
+  background: var(--bg-surface-hover);
 }
 
-.prediction-content p{
-font-size:13px;
-color:#9ca3af;
+.rec-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--primary-light);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.prediction-mini-chart{
-display:flex;
-align-items:flex-end;
-gap:6px;
-height:45px;
-margin-top:18px;
+.rec-content {
+  min-width: 0;
 }
 
-.prediction-mini-chart span{
-width:8px;
-background:#60a5fa;
-border-radius:8px;
+.rec-content strong {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
-.prediction-mini-chart span:nth-child(1){height:18px;}
-.prediction-mini-chart span:nth-child(2){height:28px;}
-.prediction-mini-chart span:nth-child(3){height:22px;}
-.prediction-mini-chart span:nth-child(4){height:36px;}
-.prediction-mini-chart span:nth-child(5){height:30px;}
-.prediction-mini-chart span:nth-child(6){height:42px;}
-.prediction-mini-chart span:nth-child(7){height:34px;}
+.rec-content p {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
 
-/* ===== COMMON ===== */
+/* ============================================================
+   ADD THE FOLLOWING TO THE END OF prediction.css
+   ============================================================ */
 
-.prediction-card-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding-bottom:14px;
-margin-bottom:20px;
-border-bottom:1px solid #eef2f7;
-}
 
-.prediction-card-header h2{
-font-size:22px;
-color:#111827;
-margin-bottom:5px;
-}
+/* ============================================================
+   CHART
+============================================================ */
 
-.prediction-card-header p{
-font-size:14px;
-color:#6b7280;
+.prediction-chart-wrapper {
+    width: 100%;
+    height: 320px;
+    margin-top: 12px;
 }
 
-/* ===== TIMELINE ===== */
+.prediction-tooltip {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 10px 14px;
+    box-shadow: var(--shadow-md);
+}
 
-.timeline-chart{
-height:260px;
-display:flex;
-align-items:flex-end;
-justify-content:space-between;
-gap:16px;
-margin-top:20px;
+.prediction-tooltip h4 {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: var(--text-primary);
 }
 
-.timeline-column{
-flex:1;
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:10px;
+.prediction-tooltip p {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    font-size: 13px;
+    color: var(--text-secondary);
 }
 
-.timeline-bar{
-width:30px;
-background:#2563eb;
-border-radius:10px 10px 0 0;
-display:flex;
-justify-content:center;
-align-items:flex-start;
-color:#fff;
-font-size:12px;
-padding-top:6px;
-transition:.3s;
+.prediction-tooltip strong {
+    color: var(--text-primary);
 }
 
-.timeline-column:hover .timeline-bar{
-background:#1d4ed8;
+
+/* ============================================================
+   TIMELINE SUMMARY
+============================================================ */
+
+.timeline-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border-color);
 }
 
-.timeline-summary{
-margin-top:24px;
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:20px;
-text-align:center;
+.timeline-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
 }
 
-.timeline-summary strong{
-display:block;
-color:#111827;
-margin-bottom:5px;
+.timeline-summary-item span {
+    font-size: 12px;
+    color: var(--text-muted);
 }
 
-.timeline-summary p{
-color:#6b7280;
-font-size:14px;
+.timeline-summary-item strong {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
 }
+
 
-/* ===== CONFIDENCE OVERVIEW ===== */
+/* ============================================================
+   CONFIDENCE
+============================================================ */
 
-.confidence-overview{
-display:flex;
-align-items:center;
-gap:30px;
+.confidence-card {
+    height: 100%;
 }
 
-.confidence-circle{
-width:170px;
-height:170px;
-border-radius:50%;
-background:linear-gradient(135deg,#2563eb,#60a5fa);
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-color:#fff;
-flex-shrink:0;
-box-shadow:0 15px 30px rgba(37,99,235,.25);
+.confidence-overview {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
-.confidence-circle h1{
-font-size:44px;
-margin:0;
+.confidence-circle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 0;
 }
 
-.confidence-circle span{
-font-size:14px;
-margin-top:8px;
+.confidence-score {
+    font-size: 42px;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
 }
 
-.confidence-details{
-flex:1;
-display:flex;
-flex-direction:column;
-gap:18px;
+.confidence-text {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-secondary);
 }
 
-.confidence-item,
-.device-stat{
-display:flex;
-justify-content:space-between;
-align-items:center;
+.confidence-details {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
-.confidence-label{
-display:flex;
-align-items:center;
-gap:10px;
-font-weight:500;
-color:#374151;
+.confidence-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.dot{
-width:12px;
-height:12px;
-border-radius:50%;
+.confidence-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-primary);
 }
 
-.dot.high{background:#16a34a;}
-.dot.medium{background:#f59e0b;}
-.dot.low{background:#dc2626;}
+.confidence-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.confidence-dot.high {
+    background: var(--success);
+}
 
-.confidence-track{
-height:8px;
-background:#e5e7eb;
-border-radius:20px;
-overflow:hidden;
-margin-top:8px;
+.confidence-dot.medium {
+    background: var(--warning);
 }
 
-.confidence-fill,
-.confidence-progress-fill{
-height:100%;
-border-radius:20px;
-background:#2563eb;
-transition:.3s;
+.confidence-dot.low {
+    background: var(--critical);
 }
 
-.confidence-fill.high{background:#16a34a;}
-.confidence-fill.medium{background:#f59e0b;}
-.confidence-fill.low{background:#dc2626;}
 
-/* ===== FAILURE RISK TABLE ===== */
+/* ============================================================
+   DEVICE CARDS
+============================================================ */
 
-.risk-table{
-width:100%;
-border-collapse:collapse;
+.device-pred-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-card);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: .25s;
 }
 
-.risk-table th,
-.risk-table td{
-padding:15px;
-text-align:left;
-border-bottom:1px solid #eef2f7;
+.device-pred-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
 }
 
-.risk-table th{
-background:#f8fafc;
-color:#374151;
-font-size:14px;
+.device-pred-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 18px;
 }
 
-.risk-table tbody tr:hover{
-background:#f9fbfd;
+.device-title {
+    display: flex;
+    gap: 12px;
 }
 
-.risk-badge{
-display:inline-block;
-padding:6px 14px;
-border-radius:30px;
-font-size:12px;
-font-weight:600;
+.device-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
 }
 
-.risk-low{
-background:#dcfce7;
-color:#15803d;
+.device-title h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 3px;
 }
 
-.risk-medium{
-background:#fef3c7;
-color:#b45309;
+.device-title p {
+    font-size: 13px;
+    color: var(--text-secondary);
 }
 
-.risk-high{
-background:#fee2e2;
-color:#b91c1c;
+.device-pred-body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.confidence-cell{
-display:flex;
-align-items:center;
-gap:10px;
+.device-pred-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.confidence-cell .confidence-track{
-flex:1;
-margin:0;
+.device-row-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 13px;
 }
 
-/* ===== DEVICE CARDS ===== */
 
-.device-prediction-card{
-background:#fff;
-border:1px solid #e5e7eb;
-border-radius:16px;
-padding:20px;
-box-shadow:0 6px 18px rgba(0,0,0,.05);
-transition:.3s;
-}
+/* ============================================================
+   RECOMMENDATIONS
+============================================================ */
 
-.device-prediction-card:hover{
-transform:translateY(-4px);
-box-shadow:0 15px 28px rgba(0,0,0,.08);
+.recommendation-panel {
+    margin-top: 4px;
 }
 
-.device-card-header{
-display:flex;
-justify-content:space-between;
-align-items:flex-start;
-margin-bottom:18px;
+.recommendation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
 }
 
-.device-card-header h3{
-font-size:18px;
-color:#111827;
-margin-bottom:5px;
+.recommendation-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    background: var(--bg-surface-secondary);
+    transition: .25s;
 }
 
-.device-card-header p{
-font-size:14px;
-color:#6b7280;
+.recommendation-item:hover {
+    border-color: var(--primary);
+    transform: translateX(4px);
 }
 
-.confidence-progress{
-margin:14px 0 20px;
-height:8px;
-background:#e5e7eb;
-border-radius:20px;
-overflow:hidden;
+.recommendation-number {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: var(--primary-light);
+    color: var(--primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
 }
 
-/* ===== RECOMMENDATIONS ===== */
-
-.recommendation-list{
-display:flex;
-flex-direction:column;
-gap:18px;
+.recommendation-content {
+    flex: 1;
 }
 
-.recommendation-item{
-display:flex;
-gap:18px;
-padding:16px;
-border:1px solid #eef2f7;
-border-radius:14px;
-background:#fafcff;
-transition:.3s;
+.recommendation-content h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
 }
 
-.recommendation-item:hover{
-background:#f2f7ff;
+.recommendation-content p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
 }
 
-.recommendation-number{
-width:42px;
-height:42px;
-border-radius:50%;
-background:#2563eb;
-color:#fff;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:700;
-flex-shrink:0;
+.recommendation-arrow {
+    color: var(--text-muted);
 }
 
-.recommendation-content h4{
-margin-bottom:6px;
-color:#111827;
-}
 
-.recommendation-content p{
-color:#6b7280;
-line-height:1.6;
+/* ============================================================
+   EMPTY STATES
+============================================================ */
+
+.prediction-empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 220px;
+    color: var(--text-muted);
+    font-size: 14px;
 }
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 992px) {
+
+    .prediction-grid {
+        grid-template-columns: 1fr;
+    }
 
-.empty-recommendations{
-text-align:center;
-padding:50px 20px;
-color:#6b7280;
+    .timeline-summary {
+        grid-template-columns: 1fr;
+    }
+
 }
+
+@media (max-width: 768px) {
+
+    .prediction-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .device-prediction-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .device-pred-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 
-/* ===== LOADING ===== */
+    .recommendation-item {
+        align-items: flex-start;
+    }
 
-.prediction-loading{
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:60vh;
-font-size:22px;
-font-weight:600;
-color:#2563eb;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ============================================================
+   AI FAILURE FORECAST (Stacked Chart)
+   ADD THIS TO prediction.css
+============================================================ */
 
-@media (max-width:1200px){
+.prediction-timeline-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-.prediction-summary-grid{
-grid-template-columns:repeat(2,1fr);
+.prediction-chart-wrapper {
+    width: 100%;
+    height: 340px;
+    padding: 0 8px;
 }
 
-.prediction-grid{
-grid-template-columns:1fr;
+.prediction-tooltip {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px 16px;
+    box-shadow: var(--shadow-md);
+    min-width: 220px;
 }
 
-.device-prediction-grid{
-grid-template-columns:1fr;
+.prediction-tooltip h4 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px;
 }
 
+.tooltip-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 8px;
+    font-size: 13px;
 }
 
-@media (max-width:768px){
+.tooltip-row:last-child {
+    margin-bottom: 0;
+}
 
-.prediction-page{
-padding:18px;
+.tooltip-row span {
+    color: var(--text-secondary);
 }
 
-.prediction-summary-grid{
-grid-template-columns:1fr;
+.tooltip-row strong {
+    color: var(--text-primary);
+    font-weight: 700;
 }
 
-.prediction-header{
-padding:22px;
+.timeline-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 8px;
 }
 
-.prediction-header h1{
-font-size:28px;
+.timeline-summary-item {
+    background: var(--bg-surface-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+    transition: var(--transition-normal);
 }
 
-.prediction-card-header h2{
-font-size:18px;
+.timeline-summary-item:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
 }
 
-.confidence-overview{
-flex-direction:column;
+.timeline-summary-item span {
+    display: block;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
 }
 
-.timeline-summary{
-grid-template-columns:1fr;
+.timeline-summary-item strong {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-primary);
 }
 
-.risk-table{
-display:block;
-overflow-x:auto;
-white-space:nowrap;
+.recharts-default-legend {
+    padding-top: 10px !important;
 }
 
+.recharts-legend-item-text {
+    color: var(--text-secondary) !important;
+    font-size: 13px !important;
 }
 
-@keyframes fadeUp{
-from{
-opacity:0;
-transform:translateY(12px);
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+    stroke: rgba(148,163,184,.15);
 }
-to{
-opacity:1;
-transform:translateY(0);
+
+.recharts-tooltip-cursor {
+    fill: rgba(59,130,246,.08);
 }
+
+@media (max-width: 992px) {
+
+    .timeline-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .prediction-chart-wrapper {
+        height: 300px;
+    }
+
 }
+
+@media (max-width: 768px) {
+
+    .prediction-chart-wrapper {
+        height: 260px;
+        padding: 0;
+    }
+
+    .timeline-summary-item {
+        padding: 14px;
+    }
+
+    .timeline-summary-item strong {
+        font-size: 18px;
+    }
 
-.prediction-summary-card,
-.prediction-card,
-.device-prediction-card{
-animation:fadeUp .35s ease;
 }

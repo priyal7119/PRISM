@@ -1,283 +1,174 @@
-// src/store/devicesStore.js
-
-
 import { create } from "zustand";
-
-
 import {
     getDevices,
     getDeviceSummary,
     restartDevice
-}
-from "../api/devices";
+} from "../api/devices";
 
-
-
-const useDevicesStore = create(
-
-(set,get)=>({
-
+const useDevicesStore = create((set, get) => ({
 
     devices: [],
-
     filteredDevices: [],
+    summary: {},
+    selectedDevice: null,
 
-    summary:{},
+    loading: false,
+    error: null,
 
-    selectedDevice:null,
+    search: "",
+    statusFilter: "All",
+    typeFilter: "All",
 
-
-    loading:false,
-
-
-    search:"",
-
-    statusFilter:"All",
-
-    typeFilter:"All",
-
-
-
-
-    loadDevices:async()=>{
-
+    loadDevices: async () => {
 
         set({
-            loading:true
+            loading: true,
+            error: null
         });
 
+        try {
 
+            const data = await getDevices();
 
-        const data =
-        await getDevices();
+            set({
+                devices: data,
+                filteredDevices: data,
+                loading: false
+            });
 
+        } catch {
 
+            set({
+                loading: false,
+                error: "Unable to load devices."
+            });
 
-        set({
-
-            devices:data,
-
-            filteredDevices:data,
-
-            loading:false
-
-        });
-
+        }
 
     },
 
+    loadSummary: async () => {
 
-
-
-    loadSummary:async()=>{
-
-
-        const data =
-        await getDeviceSummary();
-
-
+        const summary = await getDeviceSummary();
 
         set({
-
-            summary:data
-
+            summary
         });
-
 
     },
 
-
-
-
-    applyFilters:()=>{
-
+    applyFilters: () => {
 
         const {
             devices,
             search,
             statusFilter,
             typeFilter
-
         } = get();
 
+        let result = [...devices];
 
+        if (search) {
 
-        let result = devices;
-
-
-
-        if(search){
-
-            result =
-            result.filter(
-                (device)=>
-
+            result = result.filter(device =>
                 device.name
-                .toLowerCase()
-                .includes(
-                    search.toLowerCase()
-                )
-
+                    .toLowerCase()
+                    .includes(search.toLowerCase())
             );
 
         }
 
+        if (statusFilter !== "All") {
 
-
-        if(statusFilter !== "All"){
-
-
-            result =
-            result.filter(
-                (device)=>
-                device.status === statusFilter
+            result = result.filter(
+                device => device.status === statusFilter
             );
-
 
         }
 
+        if (typeFilter !== "All") {
 
-
-        if(typeFilter !== "All"){
-
-
-            result =
-            result.filter(
-                (device)=>
-                device.type === typeFilter
+            result = result.filter(
+                device => device.type === typeFilter
             );
 
-
         }
-
-
 
         set({
-
-            filteredDevices:result
-
+            filteredDevices: result
         });
-
 
     },
 
-
-
-
-    setSearch:(value)=>{
-
+    setSearch: (value) => {
 
         set({
-
-            search:value
-
+            search: value
         });
-
 
         get().applyFilters();
 
     },
 
-
-
-
-    setStatusFilter:(value)=>{
-
+    setStatusFilter: (value) => {
 
         set({
-
-            statusFilter:value
-
+            statusFilter: value
         });
-
 
         get().applyFilters();
 
     },
 
-
-
-
-    setTypeFilter:(value)=>{
-
+    setTypeFilter: (value) => {
 
         set({
-
-            typeFilter:value
-
+            typeFilter: value
         });
-
 
         get().applyFilters();
 
     },
 
-
-
-
-    resetFilters:()=>{
-
+    resetFilters: () => {
 
         set({
 
-            search:"",
-            statusFilter:"All",
-            typeFilter:"All",
-            filteredDevices:get().devices
+            search: "",
+            statusFilter: "All",
+            typeFilter: "All",
+            filteredDevices: get().devices
 
         });
 
-
     },
 
-
-
-
-
-    selectDevice:(device)=>{
-
+    selectDevice: (device) => {
 
         set({
-
-            selectedDevice:device
-
+            selectedDevice: device
         });
-
 
     },
 
-
-
-
-
-    restart:async(id)=>{
+    restart: async (id) => {
 
         await restartDevice(id);
 
-        const updated =
-        await getDevices();
-
-        const updatedDevice = updated.find((d) => d.id === id);
-
-        set({
-
-            devices:updated,
-
-            filteredDevices:updated,
-
-            selectedDevice:updatedDevice || null
-
-        });
+        await get().loadDevices();
 
         await get().loadSummary();
 
+        const device = get().devices.find(
+            d => d.id === id
+        );
+
+        set({
+            selectedDevice: device || null
+        });
+
     }
 
-
-
-})
-
-);
-
+}));
 
 export default useDevicesStore;

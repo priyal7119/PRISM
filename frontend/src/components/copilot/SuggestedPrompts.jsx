@@ -1,56 +1,82 @@
+import {
+    Sparkles,
+    ArrowRight
+} from "lucide-react";
+
+import useCopilotStore from "../../store/copilotStore";
+
 import "../../styles/copilot.css";
 
-function SuggestedPrompts({
 
-    prompts = []
+function SuggestedPrompts({ prompts = [] }) {
 
-}) {
 
-    const handlePromptClick = (prompt) => {
+    const {
+        send,
+        sending
+    } = useCopilotStore();
 
-        console.log("Selected Prompt:", prompt);
 
-        // Later:
-        // Auto-fill ChatInput
-        // or send directly to AI backend
+
+    const handlePromptClick = (prompt)=>{
+
+        if(
+            sending ||
+            !prompt
+        )
+            return;
+
+
+        send(prompt);
 
     };
+
+
 
     return (
 
         <div className="copilot-card">
 
+
             <div className="copilot-card-header">
+
 
                 <div>
 
                     <h2>
-
-                        Suggested Prompts
-
+                        Suggested Actions
                     </h2>
 
+
                     <p>
-
-                        Quickly start a conversation with PRISM AI
-
+                        Ask PRISM AI about your network
                     </p>
 
                 </div>
 
+
+                <Sparkles
+                    size={20}
+                    className="header-icon"
+                />
+
+
             </div>
+
+
+
 
             <div className="prompt-list">
 
-                {
 
+                {
                     prompts.length === 0 ?
 
                     (
 
                         <div className="empty-prompts">
 
-                            No prompts available
+                            No suggestions available
 
                         </div>
 
@@ -60,34 +86,50 @@ function SuggestedPrompts({
 
                     (
 
-                        prompts.map((prompt, index) => (
+                        prompts.map(
+                            (prompt,index)=>(
 
-                            <button
+                                <button
 
-                                key={index}
+                                    key={index}
 
-                                className="prompt-button"
+                                    className="prompt-button"
 
-                                onClick={() => handlePromptClick(prompt)}
+                                    onClick={()=>
+                                        handlePromptClick(prompt)
+                                    }
 
-                            >
+                                    disabled={sending}
 
-                                {prompt}
+                                >
 
-                            </button>
+                                    <span>
+                                        {prompt}
+                                    </span>
 
-                        ))
+
+                                    <ArrowRight
+                                        size={15}
+                                    />
+
+                                </button>
+
+                            )
+                        )
 
                     )
 
                 }
 
+
             </div>
+
 
         </div>
 
     );
 
 }
+
 
 export default SuggestedPrompts;

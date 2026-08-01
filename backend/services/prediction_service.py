@@ -1,3 +1,5 @@
+# backend/services/prediction_service.py
+
 def get_predictions():
 
     return {
@@ -30,31 +32,47 @@ def get_predictions():
 
         ],
 
+        # Stacked prediction timeline
         "timeline": [
 
             {
                 "time": "Now",
-                "value": 5
+                "cpu_spike": 2,
+                "link_failure": 1,
+                "interface_error": 1,
+                "packet_loss": 1
             },
 
             {
                 "time": "6 hrs",
-                "value": 8
+                "cpu_spike": 3,
+                "link_failure": 2,
+                "interface_error": 2,
+                "packet_loss": 1
             },
 
             {
                 "time": "12 hrs",
-                "value": 12
+                "cpu_spike": 3,
+                "link_failure": 4,
+                "interface_error": 3,
+                "packet_loss": 2
             },
 
             {
                 "time": "24 hrs",
-                "value": 9
+                "cpu_spike": 2,
+                "link_failure": 3,
+                "interface_error": 2,
+                "packet_loss": 2
             },
 
             {
                 "time": "48 hrs",
-                "value": 4
+                "cpu_spike": 1,
+                "link_failure": 1,
+                "interface_error": 1,
+                "packet_loss": 1
             }
 
         ],
@@ -62,9 +80,7 @@ def get_predictions():
         "confidence": {
 
             "high": 31,
-
             "medium": 9,
-
             "low": 2
 
         },
@@ -74,13 +90,9 @@ def get_predictions():
             {
 
                 "device": "Mumbai Core Router",
-
                 "prediction": "Stable",
-
                 "risk": "Low",
-
                 "confidence": 99,
-
                 "time_to_failure": "N/A"
 
             },
@@ -88,13 +100,9 @@ def get_predictions():
             {
 
                 "device": "Delhi Distribution Switch",
-
                 "prediction": "CPU Spike Expected",
-
                 "risk": "Medium",
-
                 "confidence": 93,
-
                 "time_to_failure": "18 Hours"
 
             },
@@ -102,13 +110,9 @@ def get_predictions():
             {
 
                 "device": "Pune Distribution Switch",
-
                 "prediction": "Stable",
-
                 "risk": "Low",
-
                 "confidence": 98,
-
                 "time_to_failure": "N/A"
 
             },
@@ -116,13 +120,9 @@ def get_predictions():
             {
 
                 "device": "Data Center Switch",
-
                 "prediction": "Link Failure Possible",
-
                 "risk": "High",
-
                 "confidence": 97,
-
                 "time_to_failure": "6 Hours"
 
             }
@@ -132,11 +132,8 @@ def get_predictions():
         "recommendations": [
 
             "Inspect uplink on Data Center Switch.",
-
             "Monitor CPU utilization on Delhi Distribution Switch.",
-
             "Run diagnostics on critical interfaces.",
-
             "Schedule preventive maintenance during off-peak hours."
 
         ]

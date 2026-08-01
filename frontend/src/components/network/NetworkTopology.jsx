@@ -1,92 +1,63 @@
 import "../../styles/network.css";
 
-function NetworkTopology({
-
-    topology = []
-
-}) {
-
-    return (
-
-        <div className="network-card topology-card">
-
-            <div className="card-header">
-
-                <div>
-
-                    <h2>
-
-                        Network Topology
-
-                    </h2>
-
-                    <p>
-
-                        Current infrastructure connectivity
-
-                    </p>
-
+function NetworkTopology({ topology = [] }) {
+    if (!topology.length) {
+        return (
+            <div className="network-card">
+                <div className="card-header">
+                    <div>
+                        <h2>Network Topology</h2>
+                        <p>No topology data available.</p>
+                    </div>
                 </div>
 
+                <div className="empty-state">
+                    <p>No topology available.</p>
+                    <span>Topology information will appear here.</span>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="network-card">
+            <div className="card-header">
+                <div>
+                    <h2>Network Topology</h2>
+                    <p>Current infrastructure connectivity</p>
+                </div>
             </div>
 
             <div className="topology-container">
+                {topology.map((device, index) => {
+                    const status = (device.status || "Healthy").toLowerCase();
 
-                {
-
-                    topology.map((device, index) => (
-
+                    return (
                         <div
-                            key={index}
+                            key={device.id || device.name || index}
                             className="topology-node"
                         >
-
-                            <div
-
-                                className={`node-status ${device.status.toLowerCase()}`}
-
-                            ></div>
-
-                            <div className="node-circle">
-
-                                {device.name.charAt(0)}
-
+                            <div className={`node-circle ${status}`}>
+                                {device.name?.charAt(0) || "?"}
                             </div>
 
-                            <h4>
+                            <div className="node-label">
+                                {device.name || "-"}
+                            </div>
 
-                                {device.name}
-
-                            </h4>
-
-                            <span>
-
-                                {device.status}
-
+                            <span className={`status-pill ${status}`}>
+                                {device.status || "-"}
                             </span>
 
-                            {
-
-                                index !== topology.length - 1 && (
-
-                                    <div className="topology-line"></div>
-
-                                )
-
-                            }
-
+                            {index !== topology.length - 1 && (
+                                <div className="topology-line" />
+                            )}
                         </div>
-
-                    ))
-
-                }
-
+                    );
+                })}
             </div>
-
         </div>
-
     );
-
 }
 
 export default NetworkTopology;

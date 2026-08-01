@@ -1,81 +1,21 @@
-// src/api/alerts.js
+import apiClient from "./apiClient";
 
+export const getAlerts = async () => {
+    const response = await apiClient.get("/alerts/");
+    return response.data;
+};
 
-const API_URL =
-"http://localhost:8000";
+export const getAlertSummary = async () => {
+    const response = await apiClient.get("/alerts/summary");
+    return response.data;
+};
 
+export const getAlert = async (id) => {
+    const response = await apiClient.get(`/alerts/${id}`);
+    return response.data;
+};
 
-
-
-export async function getAlerts(){
-
-
-    const response =
-    await fetch(
-        `${API_URL}/alerts/`
-    );
-
-
-    return response.json();
-
-}
-
-
-
-
-
-export async function getAlertSummary(){
-
-
-    const response =
-    await fetch(
-        `${API_URL}/alerts/summary`
-    );
-
-
-    return response.json();
-
-}
-
-
-
-
-
-
-export async function getAlert(id){
-
-
-    const response =
-    await fetch(
-        `${API_URL}/alerts/${id}`
-    );
-
-
-    return response.json();
-
-}
-
-
-
-
-
-export async function resolveAlert(id){
-
-
-    const response =
-    await fetch(
-
-        `${API_URL}/alerts/${id}/resolve`,
-
-        {
-
-            method:"POST"
-
-        }
-
-    );
-
-
-    return response.json();
-
-}
+export const resolveAlert = async (id) => {
+    const response = await apiClient.post(`/alerts/${id}/resolve`);
+    return response.data;
+};

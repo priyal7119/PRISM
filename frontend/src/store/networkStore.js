@@ -1,33 +1,35 @@
 import { create } from "zustand";
-
 import { getNetworkHealth } from "../api/network";
 
 const useNetworkStore = create((set) => ({
-
     network: null,
-
     loading: false,
+    error: null,
 
     fetchNetwork: async () => {
-
         set({
-
-            loading: true
-
+            loading: true,
+            error: null,
         });
 
-        const data = await getNetworkHealth();
+        try {
+            const data = await getNetworkHealth();
 
-        set({
+            set({
+                network: data,
+            });
+        } catch (error) {
+            console.error(error);
 
-            network: data,
-
-            loading: false
-
-        });
-
-    }
-
+            set({
+                error: error.message,
+            });
+        } finally {
+            set({
+                loading: false,
+            });
+        }
+    },
 }));
 
 export default useNetworkStore;

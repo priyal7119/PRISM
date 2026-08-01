@@ -1,59 +1,21 @@
-// src/api/devices.js
+import apiClient from "./apiClient";
 
+export const getDevices = async () => {
+    const response = await apiClient.get("/devices/");
+    return response.data;
+};
 
-const API_URL = "http://localhost:8000";
+export const getDeviceSummary = async () => {
+    const response = await apiClient.get("/devices/summary");
+    return response.data;
+};
 
+export const getDevice = async (id) => {
+    const response = await apiClient.get(`/devices/${id}`);
+    return response.data;
+};
 
-
-export async function getDevices(){
-
-    const response = await fetch(
-        `${API_URL}/devices/`
-    );
-
-
-    return response.json();
-
-}
-
-
-
-export async function getDeviceSummary(){
-
-    const response = await fetch(
-        `${API_URL}/devices/summary`
-    );
-
-
-    return response.json();
-
-}
-
-
-
-export async function getDevice(id){
-
-    const response = await fetch(
-        `${API_URL}/devices/${id}`
-    );
-
-
-    return response.json();
-
-}
-
-
-
-export async function restartDevice(id){
-
-    const response = await fetch(
-        `${API_URL}/devices/${id}/restart`,
-        {
-            method:"POST"
-        }
-    );
-
-
-    return response.json();
-
-}
+export const restartDevice = async (id) => {
+    const response = await apiClient.post(`/devices/${id}/restart`);
+    return response.data;
+};

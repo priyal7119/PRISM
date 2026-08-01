@@ -1,5 +1,5 @@
 function RecentAlerts({ alerts = [] }) {
-  const hasAlerts = alerts.length > 0;
+  const hasAlerts = Array.isArray(alerts) && alerts.length > 0;
 
   return (
     <div className="alerts-card">
@@ -13,12 +13,12 @@ function RecentAlerts({ alerts = [] }) {
       {hasAlerts ? (
         <div className="alerts-list">
           {alerts.map((alert, index) => (
-            <div key={index} className="alert-item">
+            <div key={alert.id ?? index} className="alert-item">
               <div className="alert-item__content">
-                <strong>{alert.title}</strong>
-                <p>{alert.message}</p>
+                <strong>{alert.title || "-"}</strong>
+                <p>{alert.description || alert.message || "-"}</p>
               </div>
-              <small>{alert.time}</small>
+              <small>{alert.time || "-"}</small>
             </div>
           ))}
         </div>

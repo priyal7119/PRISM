@@ -1,49 +1,103 @@
 import "../../styles/network.css";
 
 function InterfaceTable({ interfaces = [] }) {
-  return (
-    <div className="network-card">
-      <div className="card-header">
-        <div>
-          <h2>Interface Utilization</h2>
-          <p>Current status and bandwidth usage for key interfaces.</p>
-        </div>
-      </div>
-
-      <table className="interface-table">
-        <thead>
-          <tr>
-            <th>Interface</th>
-            <th>Utilization</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {interfaces.map((item, index) => (
-            <tr key={index}>
-              <td>{item.name}</td>
-              <td>
-                <div className="utilization-wrapper">
-                  <div className="utilization-bar">
-                    <div
-                      className="utilization-fill"
-                      style={{ width: `${item.utilization}%` }}
-                    />
-                  </div>
-                  <small>{item.utilization}%</small>
+    if (!interfaces.length) {
+        return (
+            <div className="network-card">
+                <div className="card-header">
+                    <div>
+                        <h2>Interface Utilization</h2>
+                        <p>No interface data available.</p>
+                    </div>
                 </div>
-              </td>
-              <td>
-                <span className={`status-pill ${item.status.toLowerCase()}`}>
-                  {item.status}
-                </span>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+
+                <div className="empty-state">
+                    <p>No interfaces available.</p>
+                    <span>Interface statistics will appear here.</span>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="network-card">
+            <div className="card-header">
+                <div>
+                    <h2>Interface Utilization</h2>
+                    <p>Bandwidth usage and operational status.</p>
+                </div>
+            </div>
+
+            <div className="interface-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Interface</th>
+                            <th>Utilization</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {interfaces.map((item) => (
+                            <tr key={item.id || item.name}>
+                                <td>{item.name || "-"}</td>
+
+                                <td>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 12,
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                flex: 1,
+                                                height: 8,
+                                                background: "var(--bg-surface-secondary)",
+                                                borderRadius: 999,
+                                                overflow: "hidden",
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    width: `${item.utilization ?? 0}%`,
+                                                    height: "100%",
+                                                    background: "var(--primary)",
+                                                    borderRadius: 999,
+                                                }}
+                                            />
+                                        </div>
+
+                                        <strong
+                                            style={{
+                                                minWidth: 42,
+                                                textAlign: "right",
+                                                fontSize: 13,
+                                            }}
+                                        >
+                                            {item.utilization ?? 0}%
+                                        </strong>
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span
+                                        className={`status-pill ${(
+                                            item.status || "unknown"
+                                        ).toLowerCase()}`}
+                                    >
+                                        {item.status || "Unknown"}
+                                    </span>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
 }
 
 export default InterfaceTable;

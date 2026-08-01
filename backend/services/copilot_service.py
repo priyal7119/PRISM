@@ -1,111 +1,187 @@
-def get_copilot_data():
+from datetime import datetime
 
-    return {
+from sqlalchemy import delete, select
+from sqlalchemy.ext.asyncio import AsyncSession
 
-        "status": {
+from models.copilot import CopilotConversation
+from services.ai_engine import AIEngine
+from services.copilot_context_service import CopilotContextService
 
-            "model": "PRISM AI v1.0",
 
-            "health": "Online",
+class CopilotService:
+    def __init__(self):
+        self.ai_engine = AIEngine()
+        self.context_service = CopilotContextService()
 
-            "response_time": "0.8 sec",
+    def get_status(self) -> dict:
+        return {
+            "status": "Online",
+            "mode": "AI Network Assistant",
+            "availability": "99.9%",
+            "model_status": "Local reasoning engine ready",
+            "last_updated": datetime.now().isoformat(),
+        }
 
-            "knowledge_base": "Updated"
-
-        },
-
-        "suggested_prompts": [
-
-            "Show devices with high latency",
-
-            "Predict failures for the next 24 hours",
-
-            "Summarize today's network health",
-
-            "Generate optimization recommendations",
-
-            "Explain why Device-14 is at risk"
-
-        ],
-
-        "conversation_history": [
-
-            {
-
-                "role": "user",
-
-                "message": "Show today's critical alerts."
-
-            },
-
-            {
-
-                "role": "assistant",
-
-                "message": "2 critical alerts detected on Core Router and Distribution Switch."
-
-            },
-
-            {
-
-                "role": "user",
-
-                "message": "Predict failures."
-
-            },
-
-            {
-
-                "role": "assistant",
-
-                "message": "One high-risk link failure predicted within 6 hours."
-
+    async def generate_response(self, message: str, db_session: AsyncSession | None = None, user_id: str | None = None) -> dict:
+        try:
+            context = self.context_service.build_context()
+            ai_result = await self.ai_engine.generate_response(message, context)
+        except Exception:
+            ai_result = {
+                "response": "AI service temporarily unavailable. Showing system analysis.",
+                "analysis": "The backend could not reach the AI provider, so a deterministic fallback analysis is being displayed.",
+                "risk": "Medium",
+                "confidence": 62,
+                "recommendations": [
+                    "Review the current alert timeline.",
+                    "Inspect the most recent device health events.",
+                ],
+                "provider": "local",
+                "fallback": True,
             }
 
-        ],
+        risk_level = ai_result.get("risk", "Low")
+        confidence = ai_result.get("confidence", 0)
+        response_text = ai_result.get("response", "No analysis available.")
+        analysis_text = ai_result.get("analysis", "No analysis available.")
+        recommendations = ai_result.get("recommendations", [])
+        recommendation_text = recommendations[0] if recommendations else "Continue monitoring network performance."
 
-        "insights": [
+        payload = {
+            "response": response_text,
+            "message": response_text,
+            "analysis": analysis_text,
+            "risk": risk_level,
+            "confidence": confidence,
+            "recommendation": recommendation_text,
+            "recommendations": recommendations,
+            "timestamp": datetime.now().isoformat(),
+            "fallback": ai_result.get("fallback", False),
+            "role": "assistant",
+        }
 
-            "Network utilization increased by 14% during peak hours.",
+        if db_session is not None:
+            conversation = CopilotConversation(
+                user_id=user_id,
+                user_message=message,
+                ai_response=response_text,
+                confidence=float(confidence),
+                risk_level=risk_level,
+            )
+            db_session.add(conversation)
+            await db_session.commit()
 
-            "Core Router CPU usage is stable below 45%.",
+        return payload
 
-            "Two interfaces require preventive maintenance.",
-
-            "Overall network health score is 94%."
-
+    def get_insights(self) -> dict:
+        context = self.context_service.build_context()
+        network_metrics = context.get("network_metrics", {})
+        recommendations = [
+            "Inspect the core routing path for elevated latency.",
+            "Verify warning-level devices before the next peak window.",
         ]
 
-    }
+        return {
+            "status": "Online",
+            "analysis": "The system shows a stable baseline with manageable risk around one warning-level device.",
+            "recommendation": recommendations[0],
+            "confidence": 92,
+            "risk": "Medium",
+            "suggested_prompts": [
+                "Why is latency increasing?",
+                "Are there any network risks?",
+                "Which devices need attention?",
+                "Predict possible failures",
+                "Explain current network health",
+            ],
+            "insights": [
+                {
+                    "title": "Network Health",
+                    "value": context.get("network_status", "Nominal"),
+                    "description": f"Latest latency is {network_metrics.get('latency', 0)} ms with packet loss at {network_metrics.get('packet_loss', 0)}%.",
+                },
+                {
+                    "title": "Device Summary",
+                    "value": f"{context.get('device_summary', {}).get('online', 0)} online / {context.get('device_summary', {}).get('offline', 0)} offline",
+                    "description": "The current device footprint is mostly healthy with a small offline count.",
+                },
+                {
+                    "title": "Prediction",
+                    "value": "Low Failure Probability",
+                    "description": "Short-term predictions remain stable with a warning-level device to monitor.",
+                },
+            ],
+            "recommendations": recommendations,
+            "predictions": [
+                {
+                    "title": "Failure Outlook",
+                    "value": "Stable",
+                    "description": "No immediate outage is expected within the next operational window.",
+                }
+            ],
+        }
+
+    def get_dashboard_data(self) -> dict:
+        insights = self.get_insights()
+        return {
+            "status": "PRISM AI Active",
+            "analysis": insights["analysis"],
+            "recommendation": insights["recommendation"],
+            "confidence": insights["confidence"],
+            "recommendations": insights["recommendations"],
+            "suggested_prompts": insights["suggested_prompts"],
+            "insights": insights["insights"],
+            "conversation_history": [],
+        }
+
+    async def get_history(self, db_session: AsyncSession | None = None) -> dict:
+        if db_session is None:
+            return {"history": []}
+
+        result = await db_session.execute(select(CopilotConversation).order_by(CopilotConversation.created_at.desc()))
+        conversations = result.scalars().all()
+        history = [
+            {
+                "role": "assistant",
+                "message": conversation.ai_response,
+                "timestamp": conversation.created_at.isoformat(),
+                "confidence": conversation.confidence,
+                "analysis": "Stored conversation context",
+                "recommendation": "Review the latest network conditions",
+            }
+            for conversation in conversations
+        ]
+        return {"history": history}
+
+    async def clear_history(self, db_session: AsyncSession | None = None) -> dict:
+        if db_session is not None:
+            await db_session.execute(delete(CopilotConversation))
+            await db_session.commit()
+        return {"message": "Conversation history cleared"}
 
 
-def process_chat_message(data: dict):
-    user_message = data.get("message", "").strip()
+copilot_service = CopilotService()
 
-    if not user_message:
-        return {"role": "assistant", "message": "Please provide a message."}
 
-    # Simple rule-based responses
-    msg_lower = user_message.lower()
+def get_copilot_status() -> dict:
+    return copilot_service.get_status()
 
-    if "alert" in msg_lower:
-        response = "Currently there are 3 open alerts: 2 critical and 1 warning. Would you like me to summarize them?"
-    elif "latency" in msg_lower or "latency" in msg_lower:
-        response = "Average network latency is 18ms. GigabitEthernet0/4 shows high utilization at 87%."
-    elif "device" in msg_lower:
-        response = "Monitoring 4 devices: 2 Online, 1 Warning, 1 Offline. Security Camera has been offline for 1 hour."
-    elif "predict" in msg_lower or "failure" in msg_lower:
-        response = "Prediction model shows Data Center Switch has a high risk of link failure within 6 hours (97% confidence)."
-    elif "health" in msg_lower or "network" in msg_lower:
-        response = "Overall network health is 94%. Network availability is 99.98% with average latency of 18ms."
-    elif "recommendation" in msg_lower:
-        response = "Recommendations: 1) Inspect uplink on Data Center Switch. 2) Monitor CPU on Delhi Distribution Switch. 3) Schedule preventive maintenance."
-    elif "report" in msg_lower:
-        response = "4 reports available: Network Performance, Security Analysis, Device Health, and Monthly Infrastructure. Shall I generate a new one?"
-    else:
-        response = f"I received your query: \"{user_message}\". Based on current network data, all systems are operating within normal parameters. Please ask a more specific question about alerts, devices, predictions, or network health."
 
-    return {
-        "role": "assistant",
-        "message": response
-    }
+async def generate_copilot_response(message: str, db_session: AsyncSession | None = None, user_id: str | None = None) -> dict:
+    return await copilot_service.generate_response(message, db_session=db_session, user_id=user_id)
+
+
+def get_copilot_insights() -> dict:
+    return copilot_service.get_insights()
+
+
+def get_copilot_dashboard_data() -> dict:
+    return copilot_service.get_dashboard_data()
+
+
+async def get_copilot_history(db_session: AsyncSession | None = None) -> dict:
+    return await copilot_service.get_history(db_session)
+
+
+async def clear_copilot_history(db_session: AsyncSession | None = None) -> dict:
+    return await copilot_service.clear_history(db_session)
