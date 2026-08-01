@@ -1,0 +1,44 @@
+name: prism-network
+
+topology:
+  nodes:
+    mumbai-hub:
+      kind: linux
+      image: frrouting/frr:latest
+      binds:
+        - configs/mumbai-hub.conf:/etc/frr/frr.conf
+        - configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+
+    delhi-branch:
+      kind: linux
+      image: frrouting/frr:latest
+      binds:
+        - configs/delhi-branch.conf:/etc/frr/frr.conf
+        - configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+
+    pune-branch:
+      kind: linux
+      image: frrouting/frr:latest
+      binds:
+        - configs/pune-branch.conf:/etc/frr/frr.conf
+        - configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+
+    datacenter:
+      kind: linux
+      image: frrouting/frr:latest
+      binds:
+        - configs/datacenter.conf:/etc/frr/frr.conf
+        - configs/daemons:/etc/frr/daemons
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+
+  links:
+    - endpoints: ["mumbai-hub:eth1", "delhi-branch:eth1"]
+    - endpoints: ["mumbai-hub:eth2", "pune-branch:eth1"]
+    - endpoints: ["mumbai-hub:eth3", "datacenter:eth1"]
