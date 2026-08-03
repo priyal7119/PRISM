@@ -1,108 +1,56 @@
 # backend/services/settings_service.py
 
+from copy import deepcopy
 
-settings = {
-
+DEFAULT_SETTINGS =  {
     "profile": {
-
         "name": "Admin User",
-
-        "email": "admin@prism.com",
-
-        "role": "Administrator"
-
+        "role": "Super Administrator",
+        "email": "admin@prism.local",
     },
-
-
     "network": {
-
-        "ip_range": "192.168.1.0/24",
-
-        "dns": "8.8.8.8",
-
-        "connection_mode": "Auto"
-
+        "defaultView": "overview",
     },
-
-
     "notifications": {
-
-        "email_alerts": True,
-
-        "system_alerts": True,
-
-        "critical_alerts": True
-
+        "enabled": True,
+        "emailAlerts": True,
     },
-
-
     "security": {
-
-        "session_timeout": "30 minutes",
-
-        "two_factor": False
-
+        "openAccess": True,
     },
-
-
     "preferences": {
-
-        "theme": "Light",
-
-        "language": "English"
-
-    }
-
+        "refreshInterval": 30,
+        "autoRefresh": True,
+    },
 }
 
-
+_settings = deepcopy(DEFAULT_SETTINGS)
 
 
 def get_settings():
-
-    return settings
-
-
-
+    return _settings
 
 
 def update_settings(data):
+    global _settings
 
-
-    for section in data:
-
-
-        if section in settings:
-
-
-            settings[section].update(
-
-                data[section]
-
-            )
-
-
+    _settings = {
+        **_settings,
+        **data,
+    }
 
     return {
-
-
-        "message":"Settings updated successfully",
-
-        "settings":settings
-
+        "message": "Settings updated successfully",
+        "settings": _settings,
     }
 
 
-
-
 def reset_settings():
+    global _settings
 
+    _settings = deepcopy(DEFAULT_SETTINGS)
 
     return {
-
-
-        "message":"Settings reset",
-
-        "settings":settings
-
+        "message": "Settings reset successfully",
+        "settings": _settings,
     }

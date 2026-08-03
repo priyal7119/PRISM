@@ -1,353 +1,217 @@
-// src/store/alertsStore.js
-
-
-import {create} from "zustand";
-
+import { create } from "zustand";
 
 import {
-
     getAlerts,
     getAlertSummary,
-    resolveAlert
+    getIncidentMetrics,
+    resolveAlert,
+    acknowledgeAlert,
+    escalateAlert
+} from "../api/alerts";
 
-}
+const useAlertsStore = create((set, get) => ({
 
-from "../api/alerts";
+    alerts: [],
+    filteredAlerts: [],
+    summary: {},
+    metrics: {},
+    selectedAlert: null,
 
+    loading: false,
+    error: null,
 
+    search: "",
+    severityFilter: "All",
+    statusFilter: "All",
 
-
-
-const useAlertsStore = create(
-
-(set,get)=>(
-
-{
-
-
-    alerts:[],
-
-
-    filteredAlerts:[],
-
-
-    summary:{},
-
-
-    selectedAlert:null,
-
-
-    loading:false,
-
-
-
-    search:"",
-
-
-    severityFilter:"All",
-
-
-    statusFilter:"All",
-
-
-
-
-
-
-    loadAlerts:async()=>{
-
+    loadAlerts: async () => {
 
         set({
-
-            loading:true
-
+            loading: true,
+            error: null
         });
 
+        try {
 
+            const data = await getAlerts();
 
-        const data =
-        await getAlerts();
+            set({
+                alerts: data,
+                filteredAlerts: data,
+                loading: false
+            });
 
+        } catch {
 
+            set({
+                loading: false,
+                error: "Unable to load alerts."
+            });
 
-        set({
-
-            alerts:data,
-
-            filteredAlerts:data,
-
-            loading:false
-
-        });
-
+        }
 
     },
 
+    loadSummary: async () => {
 
-
-
-
-
-    loadSummary:async()=>{
-
-
-        const data =
-        await getAlertSummary();
-
-
+        const summary = await getAlertSummary();
 
         set({
-
-            summary:data
-
+            summary
         });
-
 
     },
 
+    loadMetrics: async () => {
 
+        const metrics = await getIncidentMetrics();
 
+        set({
+            metrics
+        });
 
+    },
 
-
-
-    applyFilters:()=>{
-
+    applyFilters: () => {
 
         const {
-
             alerts,
             search,
             severityFilter,
             statusFilter
-
         } = get();
 
+        let result = [...alerts];
 
+        if (search) {
 
-
-        let result = alerts;
-
-
-
-
-
-        if(search){
-
-
-            result =
-            result.filter(
-
-                (alert)=>
-
+            result = result.filter(alert =>
                 alert.title
-                .toLowerCase()
-                .includes(
-                    search.toLowerCase()
-                )
-
+                    .toLowerCase()
+                    .includes(search.toLowerCase())
             );
-
 
         }
 
+        if (severityFilter !== "All") {
 
-
-
-
-
-        if(severityFilter !== "All"){
-
-
-            result =
-            result.filter(
-
-                (alert)=>
-
-                alert.severity === severityFilter
-
+            result = result.filter(
+                alert => alert.severity === severityFilter
             );
-
 
         }
 
+        if (statusFilter !== "All") {
 
-
-
-
-        if(statusFilter !== "All"){
-
-
-            result =
-            result.filter(
-
-                (alert)=>
-
-                alert.status === statusFilter
-
+            result = result.filter(
+                alert => alert.status === statusFilter
             );
-
 
         }
 
-
-
-
         set({
-
-            filteredAlerts:result
-
+            filteredAlerts: result
         });
-
-
 
     },
 
-
-
-
-
-
-
-    setSearch:(value)=>{
-
+    setSearch: (value) => {
 
         set({
-
-            search:value
-
+            search: value
         });
-
 
         get().applyFilters();
 
-
     },
 
-
-
-
-
-
-
-    setSeverityFilter:(value)=>{
-
+    setSeverityFilter: (value) => {
 
         set({
-
-            severityFilter:value
-
+            severityFilter: value
         });
-
-
 
         get().applyFilters();
 
-
     },
 
-
-
-
-
-
-
-    setStatusFilter:(value)=>{
-
+    setStatusFilter: (value) => {
 
         set({
-
-            statusFilter:value
-
+            statusFilter: value
         });
-
-
 
         get().applyFilters();
 
-
     },
 
-
-
-
-
-
-
-    resetFilters:()=>{
-
+    resetFilters: () => {
 
         set({
 
-            search:"",
-
-            severityFilter:"All",
-
-            statusFilter:"All",
-
-            filteredAlerts:get().alerts
+            search: "",
+            severityFilter: "All",
+            statusFilter: "All",
+            filteredAlerts: get().alerts
 
         });
 
-
     },
 
-
-
-
-
-
-
-    selectAlert:(alert)=>{
-
+    selectAlert: (alert) => {
 
         set({
-
-            selectedAlert:alert
-
+            selectedAlert: alert
         });
-
 
     },
 
-
-
-
-
-
-
-    resolve:async(id)=>{
+    resolve: async (id) => {
 
         await resolveAlert(id);
 
-        const updated =
-        await getAlerts();
+        await get().loadAlerts();
+        await get().loadSummary();
+        await get().loadMetrics();
 
-        const updatedAlert = updated.find((a) => a.id === id);
+        const updated = get().alerts.find(a => a.id === id);
 
         set({
-
-            alerts:updated,
-
-            filteredAlerts:updated,
-
-            selectedAlert:updatedAlert || null
-
+            selectedAlert: updated || null
         });
 
-        await get().loadSummary();
+    },
+
+    acknowledge: async (id) => {
+
+        await acknowledgeAlert(id);
+
+        await get().loadAlerts();
+        await get().loadMetrics();
+
+        const updated = get().alerts.find(a => a.id === id);
+
+        set({
+            selectedAlert: updated || null
+        });
+
+    },
+
+    escalate: async (id) => {
+
+        await escalateAlert(id);
+
+        await get().loadAlerts();
+        await get().loadMetrics();
+
+        const updated = get().alerts.find(a => a.id === id);
+
+        set({
+            selectedAlert: updated || null
+        });
 
     }
 
-
-
-
-
-}
-
-)
-
-);
-
+}));
 
 export default useAlertsStore;

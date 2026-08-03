@@ -1,299 +1,315 @@
-/* src/styles/devices.css */
+/* ==========================================================
+   DEVICES PAGE
+========================================================== */
 
 .devices-page {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
-/* ============================================================
-   DEVICES PAGE HEADER
-============================================================ */
+/* ==========================================================
+   HEADER
+========================================================== */
+
 .devices-header {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .devices-header h1 {
-  font-size: 1.625rem;
+  font-size: 2rem;
   font-weight: 700;
   color: var(--text-primary);
-  letter-spacing: -0.025em;
+  letter-spacing: -.03em;
 }
 
 .devices-header p {
-  font-size: 0.875rem;
+  font-size: .95rem;
   color: var(--text-secondary);
-  font-weight: 500;
 }
 
-/* ============================================================
-   DEVICE SUMMARY CARDS
-============================================================ */
+/* ==========================================================
+   SUMMARY
+========================================================== */
+
 .device-summary-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(4, minmax(220px,1fr));
+  gap: 20px;
 }
 
 .device-summary-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-card);
-  padding: 20px;
-  box-shadow: var(--shadow-sm);
+  border-radius: 18px;
+  padding: 22px;
   display: flex;
   align-items: center;
-  gap: 16px;
-  transition: var(--transition-normal);
+  gap: 18px;
   position: relative;
   overflow: hidden;
+  transition: .25s;
 }
 
-.device-summary-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 3px;
-  background: var(--primary);
+.device-summary-card::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:3px;
+  background:var(--primary);
 }
 
-.device-summary-card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+.device-summary-card:hover{
+  transform:translateY(-4px);
+  box-shadow:var(--shadow-lg);
+  border-color:var(--primary-border);
 }
 
-/* ============================================================
-   FILTER TOOLBAR
-============================================================ */
-.devices-section {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+/* ==========================================================
+   FILTERS
+========================================================== */
+
+.devices-section{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
 }
 
-.device-filters-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-card);
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  flex-wrap: wrap;
-  box-shadow: var(--shadow-sm);
+.device-filters{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-wrap:wrap;
+  background:var(--bg-surface);
+  border:1px solid var(--border-color);
+  border-radius:18px;
+  padding:18px;
 }
 
-/* ============================================================
-   DEVICE TABLE CARD
-============================================================ */
-.device-table-section {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-card);
-  padding: 22px 24px;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.device-filters input,
+.device-filters select{
+  height:44px;
+  background:var(--bg-surface-secondary);
+  border:1px solid var(--border-color);
+  border-radius:12px;
+  color:var(--text-primary);
+  padding:0 14px;
+  font-size:14px;
+  transition:.2s;
 }
 
-.device-table-section h2 {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
+.device-filters input{
+  flex:1;
+  min-width:280px;
 }
 
-.device-table-container {
-  width: 100%;
-  overflow-x: auto;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  background: var(--bg-surface);
+.device-filters input:focus,
+.device-filters select:focus{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(59,130,246,.15);
 }
 
-.device-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 14px;
+.device-filters button{
+  height:44px;
+  padding:0 18px;
+  border:none;
+  border-radius:12px;
+  background:var(--primary);
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
 }
 
-.device-table th {
-  position: sticky;
-  top: 0;
-  background-color: var(--bg-surface-secondary);
-  color: var(--text-muted);
-  font-weight: 700;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  padding: 13px 18px;
-  border-bottom: 1px solid var(--border-color);
-  z-index: 5;
-  white-space: nowrap;
+.device-filters button:hover{
+  opacity:.92;
 }
 
-.device-table td {
-  padding: 13px 18px;
-  border-bottom: 1px solid var(--border-subtle);
-  color: var(--text-primary);
-  vertical-align: middle;
+/* ==========================================================
+   TABLE CARD
+========================================================== */
+
+.device-table-section{
+  background:var(--bg-surface);
+  border:1px solid var(--border-color);
+  border-radius:20px;
+  padding:24px;
 }
 
-.device-table tbody tr:last-child td { border-bottom: none; }
-
-.device-table tbody tr:nth-child(even) td {
-  background: rgba(255,255,255,0.025);
+.device-table-section h2{
+  font-size:18px;
+  font-weight:700;
+  margin-bottom:20px;
 }
 
-.device-table tbody tr:hover td {
-  background: var(--bg-surface-hover) !important;
-  cursor: pointer;
+.device-table-container{
+  overflow:auto;
+  border:1px solid var(--border-color);
+  border-radius:16px;
 }
 
-.device-table tbody tr.selected-device-row td {
-  background: var(--bg-selected) !important;
+.device-table{
+  width:100%;
+  border-collapse:collapse;
 }
 
-.device-table tbody tr.selected-device-row {
-  box-shadow: inset 3px 0 0 var(--primary);
+.device-table th{
+  background:var(--bg-surface-secondary);
+  color:var(--text-muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  padding:16px 18px;
+  text-align:left;
 }
 
-/* device status pill */
-.device-status {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  border-radius: var(--radius-pill);
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
+.device-table td{
+  padding:18px;
+  border-top:1px solid var(--border-subtle);
+  font-size:14px;
 }
 
-/* ============================================================
-   DEVICES BOTTOM GRID
-============================================================ */
-.devices-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 20px;
+.device-table tbody tr{
+  transition:.2s;
 }
 
-@media (max-width: 1100px) {
-  .devices-grid {
-    grid-template-columns: 1fr 1fr;
+.device-table tbody tr:hover{
+  background:rgba(255,255,255,.03);
+  cursor:pointer;
+}
+
+.selected-device-row{
+  background:rgba(59,130,246,.08);
+}
+
+.selected-device-row td:first-child{
+  border-left:3px solid var(--primary);
+}
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.device-status{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:5px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.device-status.online{
+  background:rgba(34,197,94,.15);
+  color:#22c55e;
+}
+
+.device-status.warning{
+  background:rgba(245,158,11,.15);
+  color:#f59e0b;
+}
+
+.device-status.offline{
+  background:rgba(239,68,68,.15);
+  color:#ef4444;
+}
+
+/* ==========================================================
+   LOWER GRID
+========================================================== */
+
+.devices-grid{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
+  gap:22px;
+}
+
+@media(max-width:1200px){
+  .devices-grid{
+    grid-template-columns:1fr;
   }
 }
 
-@media (max-width: 768px) {
-  .devices-grid {
-    grid-template-columns: 1fr;
-  }
+/* ==========================================================
+   RIGHT SIDE STACK
+========================================================== */
+
+.devices-side{
+  display:flex;
+  flex-direction:column;
+  gap:22px;
 }
 
-/* ============================================================
-   DEVICE DETAILS SIDE CARD
-============================================================ */
-.device-details-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-card);
-  padding: 22px 24px;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+/* ==========================================================
+   COMMON CARD
+========================================================== */
+
+.device-chart-card,
+.device-details-card,
+.device-actions-card{
+  background:var(--bg-surface);
+  border:1px solid var(--border-color);
+  border-radius:20px;
+  padding:22px;
 }
 
-.device-details-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border-subtle);
+.device-chart-card h3,
+.device-details-card h3,
+.device-actions-card h3{
+  font-size:16px;
+  font-weight:700;
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--border-subtle);
 }
 
-.device-details-header h3 {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-primary);
+/* ==========================================================
+   DETAILS
+========================================================== */
+
+.device-spec-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
 }
 
-.device-spec-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+.spec-box{
+  background:var(--bg-surface-secondary);
+  border:1px solid var(--border-color);
+  border-radius:14px;
+  padding:14px;
 }
 
-.spec-box {
-  background: var(--bg-surface-secondary);
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border-color);
+.spec-box span{
+  display:block;
+  font-size:11px;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  margin-bottom:6px;
 }
 
-.spec-box span {
-  display: block;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: 500;
+.spec-box strong{
+  font-size:14px;
+  color:var(--text-primary);
 }
 
-.spec-box strong {
-  display: block;
-  font-size: 0.9375rem;
-  color: var(--text-primary);
-  font-weight: 600;
-  margin-top: 3px;
-}
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
 
-/* ============================================================
-   DEVICE ACTIONS CARD
-============================================================ */
-.device-actions-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-card);
-  padding: 22px 24px;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.device-actions-card h3 {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-primary);
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-/* ============================================================
-   DEVICE STATUS CHART CARD
-============================================================ */
-.device-status-chart-card {
-  background: var(--bg-surface);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-card);
-  padding: 22px 24px;
-  box-shadow: var(--shadow-sm);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.device-status-chart-card h3 {
-  font-size: 15px;
-  font-weight: 700;
-  color: var(--text-primary);
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--border-subtle);
+.empty-state{
+  min-height:220px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  color:var(--text-secondary);
+  gap:8px;
 }

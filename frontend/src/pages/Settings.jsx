@@ -1,94 +1,170 @@
 // src/pages/Settings.jsx
-import { useState } from "react";
-import useSettingsStore from "../store/settingsStore";
+
+import { useEffect, useState } from "react";
 import {
   User,
   Shield,
   Bell,
   Sliders,
-  RotateCcw,
   CheckCircle2,
+  RotateCcw,
   Lock,
-  Globe
 } from "lucide-react";
+
+import useSettingsStore from "../store/settingsStore";
+
 import "../styles/settings.css";
 
 function Settings() {
-  const { settings, updateSetting, resetSettings } = useSettingsStore();
+  const {
+    settings,
+    loading,
+    loadSettings,
+    updateLocalSetting,
+    saveSettings,
+    reset,
+  } = useSettingsStore();
+
   const [activeTab, setActiveTab] = useState("general");
   const [savedNotice, setSavedNotice] = useState(false);
 
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
   const tabs = [
-    { id: "general", label: "General & NOC", icon: Sliders },
-    { id: "notifications", label: "Notifications", icon: Bell },
-    { id: "security", label: "Security & SOC", icon: Shield },
-    { id: "profile", label: "User Profile", icon: User },
+    {
+      id: "general",
+      label: "General",
+      icon: Sliders,
+    },
+    {
+      id: "notifications",
+      label: "Notifications",
+      icon: Bell,
+    },
+    {
+      id: "security",
+      label: "Security",
+      icon: Shield,
+    },
+    {
+      id: "profile",
+      label: "Profile",
+      icon: User,
+    },
   ];
 
-  const handleSave = () => {
-    setSavedNotice(true);
-    setTimeout(() => setSavedNotice(false), 3000);
+  const handleSave = async () => {
+    const success = await saveSettings();
+
+    if (success) {
+      setSavedNotice(true);
+
+      setTimeout(() => {
+        setSavedNotice(false);
+      }, 3000);
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="settings-page">
+        <div className="settings-loading">
+          Loading settings...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="settings-page">
       <div className="page-header">
         <div>
           <h1>Enterprise Settings</h1>
-          <p>Manage system preferences, SOC alert thresholds, and NOC operational settings.</p>
+          <p>
+            Manage system preferences, security configuration and operational
+            settings.
+          </p>
         </div>
+
         {savedNotice && (
           <div className="saved-toast">
             <CheckCircle2 size={16} />
-            <span>Settings saved successfully!</span>
+            <span>Settings saved successfully</span>
           </div>
         )}
       </div>
 
       <div className="settings-layout">
-        <div className="settings-nav">
+        <aside className="settings-nav">
           {tabs.map((tab) => {
             const Icon = tab.icon;
+
             return (
               <button
                 key={tab.id}
-                className={`settings-nav-item ${activeTab === tab.id ? "active" : ""}`}
+                className={`settings-nav-item ${
+                  activeTab === tab.id ? "active" : ""
+                }`}
                 onClick={() => setActiveTab(tab.id)}
               >
-                <Icon size={16} />
+                <Icon size={18} />
                 <span>{tab.label}</span>
               </button>
             );
           })}
-        </div>
+        </aside>
 
         <div className="settings-content">
           {activeTab === "general" && (
             <div className="settings-section">
-              <h3 className="settings-section-title">NOC System Preferences</h3>
+              <h3 className="settings-section-title">
+                General Preferences
+              </h3>
 
               <div className="settings-form-group">
-                <label>Refresh Interval (Seconds)</label>
-                <p>Controls auto-polling frequency across live monitoring dashboards.</p>
+                <label>Refresh Interval</label>
+
                 <input
-                  type="number"
                   className="form-input"
-                  value={settings?.refreshInterval ?? 30}
-                  onChange={(e) => updateSetting("refreshInterval", parseInt(e.target.value) || 30)}
+                  type="number"
+                  value={settings.preferences.refreshInterval}
+                  onChange={(e) =>
+                    updateLocalSetting(
+                      "preferences",
+                      "refreshInterval",
+                      Number(e.target.value)
+                    )
+                  }
                 />
               </div>
 
               <div className="settings-form-group">
-                <label>Default Telemetry View</label>
-                <p>Initial data view when opening network health charts.</p>
+                <label>Default Dashboard</label>
+
                 <select
                   className="form-select"
-                  value={settings?.defaultView || "overview"}
-                  onChange={(e) => updateSetting("defaultView", e.target.value)}
+                  value={settings.network.defaultView}
+                  onChange={(e) =>
+                    updateLocalSetting(
+                      "network",
+                      "defaultView",
+                      e.target.value
+                    )
+                  }
                 >
-                  <option value="overview">Executive Overview</option>
-                  <option value="detailed">NOC Detailed Telemetry</option>
-                  <option value="topology">Network Topology Focus</option>
+                  <option value="overview">
+                    Executive Overview
+                  </option>
+
+                  <option value="detailed">
+                    Detailed Monitoring
+                  </option>
+
+                  <option value="topology">
+                    Network Topology
+                  </option>
                 </select>
               </div>
 
@@ -96,10 +172,19 @@ function Settings() {
                 <label className="switch-label">
                   <input
                     type="checkbox"
-                    checked={!!settings?.autoRefresh}
-                    onChange={(e) => updateSetting("autoRefresh", e.target.checked)}
+                    checked={settings.preferences.autoRefresh}
+                    onChange={(e) =>
+                      updateLocalSetting(
+                        "preferences",
+                        "autoRefresh",
+                        e.target.checked
+                      )
+                    }
                   />
-                  <span className="switch-text">Enable Automatic Background Refresh</span>
+
+                  <span className="switch-text">
+                    Enable Auto Refresh
+                  </span>
                 </label>
               </div>
             </div>
@@ -107,16 +192,27 @@ function Settings() {
 
           {activeTab === "notifications" && (
             <div className="settings-section">
-              <h3 className="settings-section-title">Notification & Alert Rules</h3>
+              <h3 className="settings-section-title">
+                Notifications
+              </h3>
 
               <div className="settings-form-group checkbox-group">
                 <label className="switch-label">
                   <input
                     type="checkbox"
-                    checked={!!settings?.notificationsEnabled}
-                    onChange={(e) => updateSetting("notificationsEnabled", e.target.checked)}
+                    checked={settings.notifications.enabled}
+                    onChange={(e) =>
+                      updateLocalSetting(
+                        "notifications",
+                        "enabled",
+                        e.target.checked
+                      )
+                    }
                   />
-                  <span className="switch-text">Enable System & SOC Notifications</span>
+
+                  <span className="switch-text">
+                    Enable Notifications
+                  </span>
                 </label>
               </div>
 
@@ -124,10 +220,19 @@ function Settings() {
                 <label className="switch-label">
                   <input
                     type="checkbox"
-                    checked={!!settings?.emailAlerts}
-                    onChange={(e) => updateSetting("emailAlerts", e.target.checked)}
+                    checked={settings.notifications.emailAlerts}
+                    onChange={(e) =>
+                      updateLocalSetting(
+                        "notifications",
+                        "emailAlerts",
+                        e.target.checked
+                      )
+                    }
                   />
-                  <span className="switch-text">Send Critical Incident Email Escalations</span>
+
+                  <span className="switch-text">
+                    Email Critical Alerts
+                  </span>
                 </label>
               </div>
             </div>
@@ -135,12 +240,20 @@ function Settings() {
 
           {activeTab === "security" && (
             <div className="settings-section">
-              <h3 className="settings-section-title">Security & Open Access Mode</h3>
+              <h3 className="settings-section-title">
+                Security
+              </h3>
+
               <div className="security-banner">
                 <Lock size={18} />
+
                 <div>
-                  <strong>Open Access Mode Active</strong>
-                  <p>All authentication features have been removed. Full administrative access is granted.</p>
+                  <strong>Open Access Mode</strong>
+
+                  <p>
+                    Authentication is disabled. Administrative
+                    privileges are granted to all users.
+                  </p>
                 </div>
               </div>
             </div>
@@ -148,26 +261,57 @@ function Settings() {
 
           {activeTab === "profile" && (
             <div className="settings-section">
-              <h3 className="settings-section-title">Operator Profile</h3>
+              <h3 className="settings-section-title">
+                Operator Profile
+              </h3>
+
               <div className="settings-form-group">
-                <label>Operator Name</label>
-                <input type="text" className="form-input" value="Admin Operator" readOnly />
+                <label>Name</label>
+
+                <input
+                  className="form-input"
+                  value={settings.profile.name}
+                  readOnly
+                />
               </div>
+
               <div className="settings-form-group">
-                <label>Role & Permissions</label>
-                <input type="text" className="form-input" value="Super Administrator (Full NOC Access)" readOnly />
+                <label>Role</label>
+
+                <input
+                  className="form-input"
+                  value={settings.profile.role}
+                  readOnly
+                />
+              </div>
+
+              <div className="settings-form-group">
+                <label>Email</label>
+
+                <input
+                  className="form-input"
+                  value={settings.profile.email}
+                  readOnly
+                />
               </div>
             </div>
           )}
 
           <div className="settings-actions-bar">
-            <button className="btn-primary" onClick={handleSave}>
+            <button
+              className="btn-primary"
+              onClick={handleSave}
+            >
               <CheckCircle2 size={16} />
               <span>Save Settings</span>
             </button>
-            <button className="btn-secondary" onClick={() => resetSettings()}>
+
+            <button
+              className="btn-secondary"
+              onClick={reset}
+            >
               <RotateCcw size={16} />
-              <span>Reset to Defaults</span>
+              <span>Reset Defaults</span>
             </button>
           </div>
         </div>

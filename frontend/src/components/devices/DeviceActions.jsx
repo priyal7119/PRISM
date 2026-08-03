@@ -1,18 +1,40 @@
 // src/components/devices/DeviceActions.jsx
+
+import {
+    RefreshCcw,
+    Activity,
+    FileText,
+    Shield,
+    Terminal,
+    Info,
+} from "lucide-react";
+
 import useDevicesStore from "../../store/devicesStore";
-import { RefreshCcw, Activity, FileText, Slash, Info } from "lucide-react";
 
 function DeviceActions() {
-    const { selectedDevice, restart, loading } = useDevicesStore();
+    const {
+        selectedDevice,
+        restart,
+        loading,
+    } = useDevicesStore();
 
     if (!selectedDevice) {
         return (
             <div className="device-actions-card">
                 <h3>Quick Actions</h3>
+
                 <div className="empty-state">
-                    <Info size={28} style={{ color: "var(--text-disabled)", marginBottom: 4 }} />
-                    <p>No device selected</p>
-                    <span>Select a device to execute actions.</span>
+                    <Info
+                        size={36}
+                        color="var(--text-muted)"
+                    />
+
+                    <h4>Select a Device</h4>
+
+                    <p>
+                        Choose a device from the inventory to
+                        perform management actions.
+                    </p>
                 </div>
             </div>
         );
@@ -24,52 +46,114 @@ function DeviceActions() {
 
     return (
         <div className="device-actions-card">
+
             <h3>Quick Actions</h3>
 
-            <p style={{ fontSize: 13, color: "var(--text-muted)", padding: "8px 12px", background: "var(--bg-surface-secondary)", borderRadius: 8, border: "1px solid var(--border-subtle)" }}>
-                Target: <strong style={{ color: "var(--text-primary)" }}>{selectedDevice.name || "-"}</strong>
-                <br /><span style={{ fontSize: 12 }}>{selectedDevice.ip || "-"}</span>
-            </p>
+            <div
+                style={{
+                    padding: 16,
+                    borderRadius: 14,
+                    border: "1px solid var(--border-color)",
+                    background: "var(--bg-surface-secondary)",
+                    marginBottom: 18,
+                }}
+            >
+                <div
+                    style={{
+                        fontWeight: 700,
+                        color: "var(--text-primary)",
+                        marginBottom: 4,
+                    }}
+                >
+                    {selectedDevice.name}
+                </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <button
+                <div
+                    style={{
+                        fontSize: 13,
+                        color: "var(--text-secondary)",
+                    }}
+                >
+                    {selectedDevice.ip}
+                </div>
+            </div>
+
+            <div
+                style={{
+                    display: "grid",
+                    gap: 12,
+                }}
+            >
+
+                            <button
                     className="btn-primary"
-                    style={{ width: "100%", justifyContent: "flex-start" }}
                     onClick={handleRestart}
                     disabled={loading}
+                    style={{
+                        justifyContent: "flex-start",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                    }}
                 >
-                    <RefreshCcw size={16} />
-                    {loading ? "Restarting..." : "Restart Device"}
+                    <RefreshCcw size={18} />
+                    {loading ? "Restarting Device..." : "Restart Device"}
                 </button>
 
                 <button
                     className="btn-secondary"
-                    style={{ width: "100%", justifyContent: "flex-start" }}
                     disabled
-                    title="Coming Soon"
+                    style={{
+                        justifyContent: "flex-start",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                    }}
                 >
-                    <Activity size={16} />
-                    Ping Device
+                    <Activity size={18} />
+                    Run Diagnostics
                 </button>
 
                 <button
                     className="btn-secondary"
-                    style={{ width: "100%", justifyContent: "flex-start" }}
                     disabled
-                    title="Coming Soon"
+                    style={{
+                        justifyContent: "flex-start",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                    }}
                 >
-                    <FileText size={16} />
+                    <Terminal size={18} />
+                    Open Console
+                </button>
+
+                <button
+                    className="btn-secondary"
+                    disabled
+                    style={{
+                        justifyContent: "flex-start",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                    }}
+                >
+                    <FileText size={18} />
                     View Logs
                 </button>
 
                 <button
                     className="btn-danger"
-                    style={{ width: "100%", justifyContent: "flex-start" }}
                     disabled
-                    title="Coming Soon"
+                    style={{
+                        justifyContent: "flex-start",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 10,
+                    }}
                 >
-                    <Slash size={16} />
-                    Disable Device
+                    <Shield size={18} />
+                    Isolate Device
                 </button>
             </div>
         </div>

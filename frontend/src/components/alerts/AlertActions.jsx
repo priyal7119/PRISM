@@ -1,67 +1,139 @@
-// src/components/alerts/AlertActions.jsx
+import {
+    CheckCircle2,
+    Bell,
+    ArrowUpCircle,
+    Info
+} from "lucide-react";
+
 import useAlertsStore from "../../store/alertsStore";
-import { CheckCircle2, ShieldAlert, Trash2, Info } from "lucide-react";
 
 function AlertActions() {
-    const { selectedAlert, resolveAlert, loading } = useAlertsStore();
+
+    const {
+        selectedAlert,
+        resolve,
+        acknowledge,
+        escalate,
+        loading
+    } = useAlertsStore();
 
     if (!selectedAlert) {
+
         return (
+
             <div className="alert-actions-card">
+
                 <h3>Incident Actions</h3>
+
                 <div className="empty-state">
-                    <Info size={28} style={{ color: "var(--text-disabled)", marginBottom: 4 }} />
+
+                    <Info
+                        size={28}
+                        style={{
+                            color: "var(--text-disabled)",
+                            marginBottom: 4
+                        }}
+                    />
+
                     <p>No alert selected</p>
-                    <span>Select a row to execute actions.</span>
+
+                    <span>
+                        Select an alert to perform actions.
+                    </span>
+
                 </div>
+
             </div>
+
         );
+
     }
 
-    const isResolved = (selectedAlert.status || "").toUpperCase() === "RESOLVED";
-
     return (
+
         <div className="alert-actions-card">
+
             <h3>Incident Actions</h3>
 
-            <p style={{ fontSize: 13, color: "var(--text-muted)", padding: "8px 12px", background: "var(--bg-surface-secondary)", borderRadius: 8, border: "1px solid var(--border-subtle)" }}>
-                Target: <strong style={{ color: "var(--text-primary)" }}>{selectedAlert.title || "-"}</strong>
-                <br /><span style={{ fontSize: 12 }}>{selectedAlert.device || "-"}</span>
-            </p>
+            <div
+                style={{
+                    padding: 14,
+                    borderRadius: 10,
+                    background: "var(--bg-surface-secondary)",
+                    border: "1px solid var(--border-color)",
+                    marginBottom: 16
+                }}
+            >
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <strong>{selectedAlert.title}</strong>
+
+                <div
+                    style={{
+                        marginTop: 6,
+                        fontSize: 13,
+                        color: "var(--text-secondary)"
+                    }}
+                >
+
+                    {selectedAlert.device}
+
+                </div>
+
+            </div>
+
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 10
+                }}
+            >
+
                 <button
                     className="btn-primary"
-                    style={{ width: "100%", justifyContent: "flex-start" }}
-                    onClick={() => resolveAlert(selectedAlert.id)}
-                    disabled={isResolved || loading}
+                    disabled={
+                        loading ||
+                        selectedAlert.status === "Resolved"
+                    }
+                    onClick={() => resolve(selectedAlert.id)}
                 >
+
                     <CheckCircle2 size={16} />
-                    {isResolved ? "Already Resolved" : "Resolve Incident"}
+
+                    Resolve Incident
+
                 </button>
 
                 <button
                     className="btn-secondary"
-                    style={{ width: "100%", justifyContent: "flex-start" }}
-                    disabled
-                    title="Coming Soon"
+                    disabled={loading}
+                    onClick={() => acknowledge(selectedAlert.id)}
                 >
-                    <ShieldAlert size={16} />
-                    Escalate to SOC
+
+                    <Bell size={16} />
+
+                    Acknowledge
+
                 </button>
 
                 <button
                     className="btn-danger"
-                    style={{ width: "100%", justifyContent: "flex-start" }}
-                    disabled
-                    title="Coming Soon"
+                    disabled={loading}
+                    onClick={() => escalate(selectedAlert.id)}
                 >
-                    <Trash2 size={16} />
-                    Dismiss Alert
+
+                    <ArrowUpCircle size={16} />
+
+                    Escalate
+
                 </button>
+
             </div>
+
         </div>
+
     );
+
 }
 
 export default AlertActions;

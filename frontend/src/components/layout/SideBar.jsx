@@ -11,7 +11,6 @@ import {
   TriangleAlert,
   FileBarChart,
   Settings,
-  ShieldCheck,
   ChevronLeft,
   ChevronRight,
   LogOut
@@ -36,7 +35,19 @@ function Sidebar() {
     <aside className={`dashboard-sidebar ${collapsed ? "collapsed" : ""}`}>
       <div className="sidebar-brand">
         <div className="brand-logo-icon">
-          <ShieldCheck size={22} />
+          <svg viewBox="0 0 64 64" aria-hidden="true" className="brand-mark">
+            <defs>
+              <linearGradient id="prism-mark-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ffffff" />
+                <stop offset="100%" stopColor="#d8c7ff" />
+              </linearGradient>
+            </defs>
+            <rect x="6" y="6" width="52" height="52" rx="16" fill="url(#prism-mark-gradient)" />
+            <path d="M32 14 46 24v16L32 50 18 40V24l14-10Z" fill="none" stroke="#6d28d9" strokeWidth="4" strokeLinejoin="round" />
+            <path d="M32 14v36" stroke="#6d28d9" strokeWidth="3.5" strokeLinecap="round" />
+            <path d="M18 24l14 8 14-8" stroke="#6d28d9" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M18 40l14-8 14 8" stroke="#6d28d9" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </div>
         {!collapsed && (
           <div className="brand-text">

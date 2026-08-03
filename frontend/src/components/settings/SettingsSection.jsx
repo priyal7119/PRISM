@@ -1,43 +1,97 @@
 ﻿// src/components/settings/SettingsSection.jsx
 
-function SettingsSection({ title, fields, values = {}, onChange }) {
-    return (
-        <section className="settings-section">
-            <h2>{title}</h2>
-            <div className="settings-fields">
-                {fields.map((field) => {
-                    const fieldValue = values[field.name];
-                    const type = field.type || "text";
+function SettingsSection({
+  title,
+  description,
+  fields,
+  values,
+  section,
+  onChange,
+}) {
+  return (
+    <div className="settings-section">
+      <div className="settings-section-header">
+        <h3 className="settings-section-title">{title}</h3>
 
-                    return (
-                        <div key={field.name} className="settings-field">
-                            <label htmlFor={field.name}>{field.label}</label>
+        {description && (
+          <p className="settings-section-description">
+            {description}
+          </p>
+        )}
+      </div>
 
-                            {type === "checkbox" ? (
-                                <input
-                                    id={field.name}
-                                    type="checkbox"
-                                    checked={Boolean(fieldValue)}
-                                    onChange={(event) =>
-                                        onChange(field.name, event.target.checked)
-                                    }
-                                />
-                            ) : (
-                                <input
-                                    id={field.name}
-                                    type={type}
-                                    value={fieldValue ?? ""}
-                                    onChange={(event) =>
-                                        onChange(field.name, event.target.value)
-                                    }
-                                />
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
-        </section>
-    );
+      <div className="settings-fields">
+        {fields.map((field) => (
+          <div
+            key={field.name}
+            className="settings-form-group"
+          >
+            <label>{field.label}</label>
+
+            {field.description && (
+              <p>{field.description}</p>
+            )}
+
+            {field.type === "select" ? (
+              <select
+                className="form-select"
+                value={values[field.name] ?? ""}
+                onChange={(e) =>
+                  onChange(
+                    section,
+                    field.name,
+                    e.target.value
+                  )
+                }
+              >
+                {field.options.map((option) => (
+                  <option
+                    key={option.value}
+                    value={option.value}
+                  >
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            ) : field.type === "checkbox" ? (
+              <label className="switch-label">
+                <input
+                  type="checkbox"
+                  checked={Boolean(values[field.name])}
+                  onChange={(e) =>
+                    onChange(
+                      section,
+                      field.name,
+                      e.target.checked
+                    )
+                  }
+                />
+
+                <span className="switch-text">
+                  {field.switchLabel || "Enabled"}
+                </span>
+              </label>
+            ) : (
+              <input
+                className="form-input"
+                type={field.type || "text"}
+                value={values[field.name] ?? ""}
+                onChange={(e) =>
+                  onChange(
+                    section,
+                    field.name,
+                    field.type === "number"
+                      ? Number(e.target.value)
+                      : e.target.value
+                  )
+                }
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default SettingsSection;

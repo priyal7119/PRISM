@@ -1,11 +1,12 @@
+from datetime import datetime
+
 from sqlalchemy import (
     Column,
+    DateTime,
+    Float,
     Integer,
     String,
-    DateTime,
 )
-
-from datetime import datetime
 
 from database.base import Base
 
@@ -13,14 +14,53 @@ from database.base import Base
 class Report(Base):
     __tablename__ = "reports"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True,
+    )
 
-    title = Column(String(150))
+    name = Column(
+        String(150),
+        nullable=False,
+    )
 
-    report_type = Column(String(50))
+    type = Column(
+        String(50),
+        nullable=False,
+    )
 
-    status = Column(String(20))
+    period = Column(
+        String(100),
+        nullable=False,
+    )
 
-    file_path = Column(String(255))
+    status = Column(
+        String(30),
+        nullable=False,
+        default="Processing",
+    )
 
-    created_at = Column(DateTime, default=datetime.utcnow)
+    devices = Column(
+        Integer,
+        nullable=False,
+        default=0,
+    )
+
+    uptime = Column(
+        Float,
+        nullable=False,
+        default=0.0,
+    )
+
+    incidents = Column(
+        Integer,
+        nullable=False,
+        default=0,
+    )
+
+    created_at = Column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
